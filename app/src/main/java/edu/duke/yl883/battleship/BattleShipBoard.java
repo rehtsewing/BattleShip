@@ -5,11 +5,14 @@ package edu.duke.yl883.battleship;
  * two final fields width and height.
  * 
  * field width is the width of the board.
- * field height is the height of the board.
+ * @field height is the height of the board.
  * method getWidth()
  * method getHeight()
  */
 public class BattleShipBoard implements Board {
+  /**
+   * Width and height of the board
+   */
   private final int width, height;
 
   /**
@@ -41,9 +44,9 @@ public class BattleShipBoard implements Board {
   }
 
   /**
-   * Get the width of the board
+   * Get the height of the board
    * 
-   * @return width of the board
+   * @return height of the board
    */
   public int getHeight() {
     return height;
