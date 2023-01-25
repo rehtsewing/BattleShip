@@ -1,0 +1,8 @@
+package edu.duke.yl883.battleship;
+
+public class BattleShipBoard {
+  private final int width, length;
+  
+  public int getWidth(); //Get the width of the board
+  public int getLength(); //Get the length of the board 
+}
