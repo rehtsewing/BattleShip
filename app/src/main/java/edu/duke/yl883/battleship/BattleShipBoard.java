@@ -4,10 +4,10 @@ package edu.duke.yl883.battleship;
  * Class BattleShipBoard implements interface Board having 
  * two final fields width and height.
  * 
- * @field width is the width of the board.
- * @field height is the height of the board.
- * @method getWidth()
- * @method getHeight()
+ * field width is the width of the board.
+ * field height is the height of the board.
+ * method getWidth()
+ * method getHeight()
  */
 public class BattleShipBoard implements Board {
   private final int width, height;
@@ -31,12 +31,21 @@ public class BattleShipBoard implements Board {
     this.width = w;
     this.height = h;
   }
-
-  public int getWidth() { // Get the width of the board
+  /**
+   * Get the width of the board
+   * 
+   * @return width of the board
+   */
+  public int getWidth() { 
     return width;
   }
 
-  public int getHeight() { // Get the height of the board
+  /**
+   * Get the width of the board
+   * 
+   * @return width of the board
+   */
+  public int getHeight() {
     return height;
   }
 }
