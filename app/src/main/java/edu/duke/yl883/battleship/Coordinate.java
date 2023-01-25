@@ -72,8 +72,8 @@ public class Coordinate {
   }
 
   /**
-   * Override method equal from what
-   * inherit from Object
+   * Override method equals from what
+   * inherited from Object
    */
   @Override
   public boolean equals(Object o) {
