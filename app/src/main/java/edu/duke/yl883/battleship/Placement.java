@@ -39,7 +39,7 @@ public class Placement {
   public Placement(String descr) {
     descr = descr.toUpperCase();
     if (descr.length() < 1) {
-      throw new IllegalArgumentException("String of the placement should be longer but is" + descr.length());
+      throw new IllegalArgumentException("String of the placement should be longer but is " + descr.length());
     }
     String coorDescr = descr.substring(0, descr.length() - 1);
     Coordinate w = new Coordinate(coorDescr);

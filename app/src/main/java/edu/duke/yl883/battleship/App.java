@@ -3,12 +3,69 @@
  */
 package edu.duke.yl883.battleship;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-    }
+public class App {
+  /**
+   * theBoard is the Board for the App
+   * view is the Text view of the board
+   * inputReader is a bufferedReader of the App
+   * out is the stream to be printed to
+   */
+  final Board<Character> theBoard;
+  final BoardTextView view;
+  final BufferedReader inputReader;
+  final PrintStream out;
+
+  /**
+   * Construct the game app with specfied board,
+   * Reader, PrintStream
+   *
+   * @param theBoard    is board used for current App
+   * @param inputSource is the input reader for current App
+   * @param out         is the out stream for current App
+   */
+  public App(Board<Character> theBoard, Reader inputSource, PrintStream out) {
+    this.theBoard = theBoard;
+    this.view = new BoardTextView(theBoard);
+    this.inputReader = new BufferedReader(inputSource);
+    this.out = out;
+  }
+
+  /**
+   * Create a Placement object from the information
+   * from information in input reader
+   *
+   * @param prompt is the message use as prompt for game
+   * @return the Placement object created
+   */
+  public Placement readPlacement(String prompt) throws IOException {
+    out.println(prompt);
+    String s = inputReader.readLine();
+    return new Placement(s);
+  }
+
+  /**
+   * Read a Placement (prompt: "Where would you like to put your ship?")
+   * Create a basic ship based on the location in that Placement
+   * (orientation doesn't matter yet)
+   * Add that ship to the board
+   * Print out the board (to out, not to System.out)
+   */
+  public void doOnePlacement() throws IOException {
+    Placement p = readPlacement("Where would you like to put your ship?");
+    Ship<Character> s = new BasicShip(p.getWhere());
+    theBoard.tryAddShip(s);
+    out.println(view.displayMyOwnBoard());
+  }
+
+  public static void main(String[] args) throws IOException {
+    Board<Character> b = new BattleShipBoard<Character>(10, 20);
+    App app = new App(b, new InputStreamReader(System.in), System.out);
+    app.doOnePlacement();
+  }
 }

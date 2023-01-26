@@ -39,7 +39,7 @@ public class Coordinate {
   */
   public Coordinate(String descr) {
     if (descr.length() != 2) {
-      throw new IllegalArgumentException("Length of the string taken should be equal to 2 but is" + descr.length());
+      throw new IllegalArgumentException("Length of the string taken should be equal to 2 but is " + descr.length());
     }
     char colLetter = descr.charAt(1);
     char rowLetter = descr.charAt(0);
