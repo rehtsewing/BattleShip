@@ -33,7 +33,7 @@ public class BoardTextView {
    */
   public String displayMyOwnBoard() {
     String h = makeHeader();
-    String m = makeEmptyBody();
+    String m = makeBody(toDisplay);
     return h + m + h;
   }
 
@@ -55,20 +55,23 @@ public class BoardTextView {
   }
 
   /**
-   * This makes the internal lines for empty board, e.g. A | | A\n
+   * This makes the lines for body of board, e.g. A |s| A\n
    * 
-   * @return the String that is the empty body for the given board
+   * @return the String that is the body for the given board
    */
-  String makeEmptyBody() {
+  String makeBody(Board<Character> b) {
     StringBuilder ans = new StringBuilder(""); // Start at nothing
-    for (int i   = 0; i  < toDisplay.getHeight(); i++) {
+    for (int i = 0; i  < toDisplay.getHeight(); i++) {
       String sep=" "; //Start with a space, then switch to | to separate
       char letter = 'A';
       letter += i;
       ans.append(letter);
       for (int j = 0; j < toDisplay.getWidth(); j++) {
+        String sign = " "; //The sign of which specific coordinate
+        Coordinate c = new Coordinate(i, j);
+        if(b.whatIsAt(c) != null) sign = b.whatIsAt(c).toString(); 
         ans.append(sep);
-        ans.append(" ");
+        ans.append(sign);
         sep = "|";
       }
       ans.append(" ");
