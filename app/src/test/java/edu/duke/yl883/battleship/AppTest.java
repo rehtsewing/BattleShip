@@ -82,10 +82,11 @@ class AppTest {
     expected[2] = new Placement(new Coordinate(0, 4), 'V');
     Board<Character> b1 = new BattleShipBoard<>(10, 20);
     BoardTextView[] expectedView = new BoardTextView[3];
+    V1ShipFactory f = new V1ShipFactory();
 
     for (int i = 0; i < expected.length; i++) {
       app.doOnePlacement();
-      b1.tryAddShip(new RectangleShip<Character>(expected[i].getWhere(), 's', '*'));
+      b1.tryAddShip(f.makeDestroyer(expected[i]));
       expectedView[i] = new BoardTextView(b1);
       assertEquals(prompt + expectedView[i].displayMyOwnBoard() + "\n", bytes.toString()); 
       bytes.reset(); // clear out bytes for next time around

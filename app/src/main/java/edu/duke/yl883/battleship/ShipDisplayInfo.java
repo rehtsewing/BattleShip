@@ -1,5 +1,9 @@
 package edu.duke.yl883.battleship;
 
+
+/**
+ * This interface represents the Ship display information.
+ */
 public interface ShipDisplayInfo<T> {
   /**
    * Get information from specified coordinate

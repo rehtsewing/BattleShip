@@ -9,18 +9,20 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 
+/** Highest level structure of battleship game */
 public class App {
   /**
    * theBoard is the Board for the App
    * view is the Text view of the board
    * inputReader is a bufferedReader of the App
    * out is the stream to be printed to
+   * shipFactory is object to make ship
    */
   final Board<Character> theBoard;
   final BoardTextView view;
   final BufferedReader inputReader;
   final PrintStream out;
-
+  final AbstractShipFactory<Character> shipFactory;
   /**
    * Construct the game app with specfied board,
    * Reader, PrintStream
@@ -34,6 +36,7 @@ public class App {
     this.view = new BoardTextView(theBoard);
     this.inputReader = new BufferedReader(inputSource);
     this.out = out;
+    this.shipFactory = new V1ShipFactory();
   }
 
   /**
@@ -51,14 +54,13 @@ public class App {
 
   /**
    * Read a Placement (prompt: "Where would you like to put your ship?")
-   * Create a basic ship based on the location in that Placement
-   * (orientation doesn't matter yet)
+   * Create a ship based on the location in that Placement
    * Add that ship to the board
    * Print out the board (to out, not to System.out)
    */
   public void doOnePlacement() throws IOException {
     Placement p = readPlacement("Where would you like to put your ship?");
-    Ship<Character> s = new RectangleShip<Character>(p.getWhere(), 's', '*');
+    Ship<Character> s  = shipFactory.makeDestroyer(p);
     theBoard.tryAddShip(s);
     out.println(view.displayMyOwnBoard());
   }

@@ -2,6 +2,7 @@ package edu.duke.yl883.battleship;
 
 import java.util.HashMap;
 
+/** Abstract of features of a ship*/
 public abstract class BasicShip<T> implements Ship<T> {
   /**
    * HashMap for all pieces of the ship
