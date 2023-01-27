@@ -85,7 +85,7 @@ class AppTest {
 
     for (int i = 0; i < expected.length; i++) {
       app.doOnePlacement();
-      b1.tryAddShip(new BasicShip(expected[i].getWhere()));
+      b1.tryAddShip(new RectangleShip<Character>(expected[i].getWhere(), 's', '*'));
       expectedView[i] = new BoardTextView(b1);
       assertEquals(prompt + expectedView[i].displayMyOwnBoard() + "\n", bytes.toString()); 
       bytes.reset(); // clear out bytes for next time around

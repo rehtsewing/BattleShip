@@ -1,24 +1,42 @@
 package edu.duke.yl883.battleship;
 
-public class BasicShip implements Ship<Character> {
+import java.util.HashMap;
+
+public abstract class BasicShip<T> implements Ship<T> {
   /**
-   *Location of the basic ship
+   * HashMap for all pieces of the ship
+   * Coordinate is the place of the piece
+   * Boolean is true if piece has been hit
+   *            false if has not been hit
    */
-  private final Coordinate myLocation;
+  protected HashMap<Coordinate, Boolean> myPieces;
+  /** 
+   * Display info of the ship
+   */
+  protected ShipDisplayInfo<T> myDisplayInfo;
 
   /**
-   * Constructs a BasicShip with the specified coordinate
+   * Constructs a BasicShip with specified coordinate
+   * Iterable
    * 
-   * @param where is the coordinate of the newly constructed basic ship.
+   * @param where is the Iterable of pieces' coordinate
+   *           in the newly constructed basic ship.
+   * @param myDisplayInfo is the display info of the ship
    */
-  public BasicShip(Coordinate where) {
-    this.myLocation = where;
+  public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
+    myPieces = new HashMap<Coordinate, Boolean>();
+    for(Coordinate c: where) {
+      myPieces.put(c, false);
+    }
+    this.myDisplayInfo = myDisplayInfo;
   }
-  
+  /**
+   * @inheritdoc
+   */
   @Override
   public boolean occupiesCoordinates(Coordinate where) {
     // TODO Auto-generated method stub
-    return where.equals(myLocation);
+    return myPieces.containsKey(where);
   }
 
   @Override
@@ -38,11 +56,11 @@ public class BasicShip implements Ship<Character> {
     // TODO Auto-generated method stub
     return false;
   }
-
   @Override
-  public Character getDisplayInfoAt(Coordinate where) {
-    // TODO Auto-generated method stub
-    return 's';
+  public T getDisplayInfoAt(Coordinate where) {
+    //TODO this is not right.  We need to
+    //look up the hit status of this coordinate
+    return myDisplayInfo.getInfo(where, false);
   }
 
 }

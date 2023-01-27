@@ -32,7 +32,7 @@ public class BattleShipBoardTest {
   }
   private void addOneBasicShip(BattleShipBoard<Character> b, Character[][] expected, int row, int col) { 
     Coordinate c = new Coordinate(row, col);
-    Ship<Character> s = new BasicShip(c);
+    Ship<Character> s = new RectangleShip<Character>(c, 's', '*');
     b.tryAddShip(s);
     expected[row][col] = 's';
   }
