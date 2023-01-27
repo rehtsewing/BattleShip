@@ -31,36 +31,51 @@ public abstract class BasicShip<T> implements Ship<T> {
     this.myDisplayInfo = myDisplayInfo;
   }
   /**
-   * @inheritdoc
+   * Check if the given coordinate is part of
+   * the ship.
+   *
+   * @param c is the coordinate to be checked
+   * @throws IllegalArgumentException if c is
+   *           not part of the ship
+   */
+  protected void checkCoordinateInThisShip(Coordinate c) {
+    if(!myPieces.containsKey(c)) {
+      throw new IllegalArgumentException("Coordinate" + c.toString() + "is not on the ship");
+    }
+  }
+
+  /**
+   * {@inheritDoc}
    */
   @Override
   public boolean occupiesCoordinates(Coordinate where) {
-    // TODO Auto-generated method stub
     return myPieces.containsKey(where);
   }
-
+  /** {@inheritDoc}*/
   @Override
   public boolean isSunk() {
-    // TODO Auto-generated method stub
-    return false;
+    for(boolean hit : myPieces.values()) {
+      if(!hit) return false;
+    }
+    return true;
   }
-
+  /** {@inheritDoc} */
   @Override
   public void recordHitAt(Coordinate where) {
-    // TODO Auto-generated method stub
-    
+    checkCoordinateInThisShip(where);
+    myPieces.put(where, true);  
   }
-
+  /** {@inheritDoc} */
   @Override
   public boolean wasHitAt(Coordinate where) {
-    // TODO Auto-generated method stub
-    return false;
+    checkCoordinateInThisShip(where);
+    return myPieces.get(where);
   }
+  /** {@inheritDoc} */
   @Override
   public T getDisplayInfoAt(Coordinate where) {
-    //TODO this is not right.  We need to
-    //look up the hit status of this coordinate
-    return myDisplayInfo.getInfo(where, false);
+    checkCoordinateInThisShip(where);
+    return myDisplayInfo.getInfo(where, myPieces.get(where));
   }
 
 }

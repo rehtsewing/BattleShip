@@ -37,7 +37,8 @@ public class PlacementTest {
     Placement p2 = new Placement(c1, 'v');
     Placement p3 = new Placement(c2, 'V');
     Placement p4 = new Placement(c1, 'H'); 
-    Placement p5 = new Placement(c3, 'H'); 
+    Placement p5 = new Placement(c3, 'H');
+    assertEquals("B2V", p1.toString());
     assertEquals(p1.toString(), p2.toString());
     assertEquals(p1.toString(), p3.toString());
     assertNotEquals(p1.toString(), p4.toString());

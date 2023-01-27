@@ -93,7 +93,13 @@ public class Placement {
    */
   @Override
   public String toString() {
-    return "(" + where.toString() + ", " + orientation + ")";
+    StringBuilder s = new StringBuilder();
+    char sign = 'A';
+    sign += where.getRow();
+    s.append(sign);
+    s.append(where.getColumn());
+    s.append(orientation);
+    return s.toString();
   }
 
   /**

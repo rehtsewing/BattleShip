@@ -26,9 +26,9 @@ public class SimpleShipDisplayInfo<T> implements ShipDisplayInfo<T> {
     this.myData = data;
     this.onHit = h;
   }
+  /** {@inheritDoc} */
   @Override
   public T getInfo(Coordinate where, boolean hit) {
-    // TODO Auto-generated method stub
     if(hit) return onHit;
     else return myData;
   }
