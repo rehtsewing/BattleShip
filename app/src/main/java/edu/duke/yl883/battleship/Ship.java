@@ -11,11 +11,14 @@ public interface Ship<T> {
    * @return the name of this ship
    */
   public String getName();
-
+ /**
+   * Get all of the Coordinates that this Ship occupies.
+   * @return An Iterable with the coordinates that this Ship occupies
+   */
+  public Iterable<Coordinate> getCoordinates();
 
   /**
    * Check if this ship occupies the given coordinate.
-   * 
    * @param where is the Coordinate to check if this Ship occupies
    * @return true if where is inside this ship, false if not.
    */

@@ -20,16 +20,20 @@ public class BattleShipBoard<T> implements Board<T> {
    * ArrayList of ships on the board
    */
   final ArrayList<Ship<T>> myShips;
+  /** PLacement rule check of the board*/
+  private final PlacementRuleChecker<T> placementChecker;
+
   /**
    * Constructs a BattleShipBoard with the specified width
    * and height, also with an empty list of ships
    * 
    * @param w is the width of the newly constructed board.
    * @param h is the height of the newly constructed board.
+   * @param pChecker is placement rule checker
    * @throws IllegalArgumentException if the width or height are less than or
    *                                  equal to zero.
    */
-  public BattleShipBoard(int w, int h) {
+  public BattleShipBoard(int w, int h, PlacementRuleChecker<T> pChecker) {
     if (w <= 0) {
       throw new IllegalArgumentException("BattleShipBoard's width must be positive but is " + w);
     }
@@ -39,7 +43,13 @@ public class BattleShipBoard<T> implements Board<T> {
     this.width = w;
     this.height = h;
     this.myShips = new ArrayList<Ship<T>>();
+    this.placementChecker = pChecker;
   }
+  public BattleShipBoard(int w, int h) {
+    this(w, h, new InBoundsRuleChecker<T>(null));
+  }
+
+  
   /**
    * Get the width of the board
    * 
@@ -63,6 +73,8 @@ public class BattleShipBoard<T> implements Board<T> {
    * @param toAdd is the ship try to be added to the list
    */
   public boolean tryAddShip(Ship<T> toAdd) {
+    //TODO: check for correctness
+    placementChecker.checkPlacement(toAdd, this);
     myShips.add(toAdd);
     return true;
   }

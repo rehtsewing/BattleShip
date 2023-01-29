@@ -82,5 +82,17 @@ public class RectangleShipTest {
     Coordinate c2 = new Coordinate(3, 2);
     assertEquals('s', rShip.getDisplayInfoAt(c2));
   }
+  @Test
+  public void test_get_coordinates() {
+    Coordinate c1 = new Coordinate(2, 2);
+    Coordinate c2 = new Coordinate(3, 2);
+    Coordinate c3 = new Coordinate(4, 2);
+    RectangleShip<Character> rShip = new RectangleShip<Character>("carrier", c1, 1, 3, 's', '*');
+    HashSet<Coordinate> s = new HashSet<>();
+    s.add(c1);
+    s.add(c2);
+    s.add(c3);
+    assertEquals(s, rShip.getCoordinates());
+  }
   
 }

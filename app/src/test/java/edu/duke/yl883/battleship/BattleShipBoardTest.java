@@ -46,7 +46,7 @@ public class BattleShipBoardTest {
       Arrays.fill(c, null);
     }
     checkWhatIsAtBoard(b1, expected);
-    addOneBasicShip(b1, expected, 1, 1);
+    addOneBasicShip(b1, expected, 0, 1);
     checkWhatIsAtBoard(b1, expected);
     addOneBasicShip(b1, expected, 2, 1);
     checkWhatIsAtBoard(b1, expected);

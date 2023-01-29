@@ -44,6 +44,11 @@ public abstract class BasicShip<T> implements Ship<T> {
       throw new IllegalArgumentException("Coordinate" + c.toString() + "is not on the ship");
     }
   }
+  /** {@inheritDoc}*/
+  @Override
+  public Iterable<Coordinate> getCoordinates() {
+    return myPieces.keySet();
+  }
 
   /**
    * {@inheritDoc}
