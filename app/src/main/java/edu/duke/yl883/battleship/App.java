@@ -6,68 +6,39 @@ package edu.duke.yl883.battleship;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
 
 /** Highest level structure of battleship game */
 public class App {
+  /** Two textplayer of the game*/
+  final TextPlayer player1, player2; 
   /**
-   * theBoard is the Board for the App
-   * view is the Text view of the board
-   * inputReader is a bufferedReader of the App
-   * out is the stream to be printed to
-   * shipFactory is object to make ship
-   */
-  final Board<Character> theBoard;
-  final BoardTextView view;
-  final BufferedReader inputReader;
-  final PrintStream out;
-  final AbstractShipFactory<Character> shipFactory;
-  /**
-   * Construct the game app with specfied board,
-   * Reader, PrintStream
+   * Construct the game app with specfied two players
    *
-   * @param theBoard    is board used for current App
-   * @param inputSource is the input reader for current App
-   * @param out         is the out stream for current App
+   * @param player1 is first player
+   * @param player2 is second player
    */
-  public App(Board<Character> theBoard, Reader inputSource, PrintStream out) {
-    this.theBoard = theBoard;
-    this.view = new BoardTextView(theBoard);
-    this.inputReader = new BufferedReader(inputSource);
-    this.out = out;
-    this.shipFactory = new V1ShipFactory();
+  public App(TextPlayer player1, TextPlayer player2) {
+    this.player1 = player1;
+    this.player2 = player2;
   }
-
-  /**
-   * Create a Placement object from the information
-   * from information in input reader
-   *
-   * @param prompt is the message use as prompt for game
-   * @return the Placement object created
+  /** 
+   * Handle player1 and player 2 to
+   * start placement phase 
    */
-  public Placement readPlacement(String prompt) throws IOException {
-    out.println(prompt);
-    String s = inputReader.readLine();
-    return new Placement(s);
-  }
-
-  /**
-   * Read a Placement (prompt: "Where would you like to put your ship?")
-   * Create a ship based on the location in that Placement
-   * Add that ship to the board
-   * Print out the board (to out, not to System.out)
-   */
-  public void doOnePlacement() throws IOException {
-    Placement p = readPlacement("Where would you like to put your ship?");
-    Ship<Character> s  = shipFactory.makeDestroyer(p);
-    theBoard.tryAddShip(s);
-    out.println(view.displayMyOwnBoard());
+  public void doPlacementPhase() throws IOException{
+    player1.doPlacementPhase();
+    player2.doPlacementPhase();
   }
 
   public static void main(String[] args) throws IOException {
-    Board<Character> b = new BattleShipBoard<Character>(10, 20);
-    App app = new App(b, new InputStreamReader(System.in), System.out);
-    app.doOnePlacement();
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20);
+    Board<Character> b2 = new BattleShipBoard<Character>(10, 20);
+    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    V1ShipFactory factory = new V1ShipFactory();
+    TextPlayer p1 = new TextPlayer("A", b1, input, System.out, factory);
+    TextPlayer p2 = new TextPlayer("B", b2, input, System.out, factory);
+
+    App app = new App(p1, p2);
+    app.doPlacementPhase();
   }
 }
