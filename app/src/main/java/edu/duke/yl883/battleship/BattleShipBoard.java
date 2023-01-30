@@ -46,7 +46,7 @@ public class BattleShipBoard<T> implements Board<T> {
     this.placementChecker = pChecker;
   }
   public BattleShipBoard(int w, int h) {
-    this(w, h, new InBoundsRuleChecker<T>(null));
+    this(w, h, new InBoundsRuleChecker<T>(new NoCollisionRuleChecker<T>(null)));
   }
 
   
@@ -71,10 +71,14 @@ public class BattleShipBoard<T> implements Board<T> {
    * Try to add the ship to myShips, but 
    * might not succeed
    * @param toAdd is the ship try to be added to the list
+   * @return true if successfully add the ship
    */
   public boolean tryAddShip(Ship<T> toAdd) {
-    myShips.add(toAdd);
-    return true;
+    if(placementChecker.checkPlacement(toAdd, this)) {
+      myShips.add(toAdd);
+      return true;
+    }
+    return false;
   }
   /**
    * Takes a Coordinate, and sees which (if any) 

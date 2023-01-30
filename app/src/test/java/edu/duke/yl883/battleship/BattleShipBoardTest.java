@@ -51,4 +51,24 @@ public class BattleShipBoardTest {
     addOneBasicShip(b1, expected, 2, 1);
     checkWhatIsAtBoard(b1, expected);
   }
+  @Test
+  public void test_rule_checker() {
+    int wid = 7;
+    int col = 5;
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col);
+    PlacementRuleChecker<Character> c = new InBoundsRuleChecker<Character>(new NoCollisionRuleChecker<Character>(null));
+    BattleShipBoard<Character> b2 = new BattleShipBoard<>(wid, 7, c);
+    V1ShipFactory f = new V1ShipFactory();
+    Ship<Character> s1 = f.makeBattleship(new Placement(new Coordinate(3, 0), 'V'));
+    Ship<Character> s2 = f.makeDestroyer(new Placement(new Coordinate(1, 1), 'V'));
+    Ship<Character> s3 = f.makeBattleship(new Placement(new Coordinate(3, 1), 'H'));
+    Ship<Character> s4 = f.makeBattleship(new Placement(new Coordinate(4, 2), 'V'));
+    Ship<Character> s5 = f.makeBattleship(new Placement(new Coordinate(0, 0), 'H'));
+    assertEquals(false, b1.tryAddShip(s1));
+    assertEquals(true, b1.tryAddShip(s2));
+    assertEquals(false, b1.tryAddShip(s3));
+    assertEquals(false, b1.tryAddShip(s4));
+    assertEquals(true, b1.tryAddShip(s5));
+    assertEquals(true, b2.tryAddShip(s1));
+  }
 }
