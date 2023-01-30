@@ -73,8 +73,6 @@ public class BattleShipBoard<T> implements Board<T> {
    * @param toAdd is the ship try to be added to the list
    */
   public boolean tryAddShip(Ship<T> toAdd) {
-    //TODO: check for correctness
-    placementChecker.checkPlacement(toAdd, this);
     myShips.add(toAdd);
     return true;
   }
@@ -83,6 +81,9 @@ public class BattleShipBoard<T> implements Board<T> {
    * Ship occupies that coordinate
    *
    * @param where is the coordinate taken for check
+   * @return display info of ships if where occupied
+   *         by ships or
+   *         null if it is vacant
    */ 
   public T whatIsAt(Coordinate where) {
     for (Ship<T> s: myShips) {
