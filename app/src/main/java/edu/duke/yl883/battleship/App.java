@@ -7,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/** Highest level structure of battleship game */
+/**c- Highest level structure of battleship game */
 public class App {
   /** Two textplayer of the game*/
   final TextPlayer player1, player2; 

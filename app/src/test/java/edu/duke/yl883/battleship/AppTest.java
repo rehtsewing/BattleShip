@@ -6,6 +6,7 @@ package edu.duke.yl883.battleship;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,23 @@ class AppTest {
     String actual = bytes.toString();
     assertEquals(expected, actual);
 
+  }
+  @Test
+  void test_do_placement_phase() throws IOException{
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20);
+    Board<Character> b2 = new BattleShipBoard<Character>(10, 20);
+    BufferedReader input = new BufferedReader(new StringReader("A0V\nC0H\nA2V\nA3V\nF4V\nA5V\nE6V\nA7V\nA8V\nD9V\nA0V\nC0H\nA2V\nA3V\nF4V\nA5V\nE6V\nA7V\nA8V\nD9V\n"));
+    V1ShipFactory factory = new V1ShipFactory();
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream output = new PrintStream(bytes, true);
+    ByteArrayOutputStream bytes1 = new ByteArrayOutputStream();
+    PrintStream output1 = new PrintStream(bytes1, true);
+    TextPlayer p1 = new TextPlayer("A", b1, input, output, factory);
+    TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory);
+
+    App app = new App(p1, p2);
+    app.doPlacementPhase();
+    assertEquals(bytes.toString(), bytes1.toString());
   }
 
 }
