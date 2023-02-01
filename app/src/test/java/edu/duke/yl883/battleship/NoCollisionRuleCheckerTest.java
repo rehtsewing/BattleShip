@@ -17,13 +17,13 @@ public class NoCollisionRuleCheckerTest {
 
     b.tryAddShip(s1);
     b1.tryAddShip(s2);
-    assertEquals(false, c.checkPlacement(s2, b));
-    assertEquals(true, c.checkPlacement(s3, b1));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", c.checkPlacement(s2, b));
+    assertEquals(null, c.checkPlacement(s3, b1));
   }
   @Test
   public void test_chain() {
     BattleShipBoard<Character> b = new BattleShipBoard<>(4, 4);
-    BattleShipBoard<Character> b1 = new BattleShipBoard<>(6, 5, new InBoundsRuleChecker<Character>(null));
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(6, 6, new InBoundsRuleChecker<Character>(null));
     V1ShipFactory f = new V1ShipFactory();
     Ship<Character> s1 = f.makeBattleship(new Placement(new Coordinate(3, 0), 'H'));
     Ship<Character> s2 = f.makeBattleship(new Placement(new Coordinate(0, 3), 'V'));
@@ -34,10 +34,10 @@ public class NoCollisionRuleCheckerTest {
 
     b.tryAddShip(s1);
     b1.tryAddShip(s2);
-    assertEquals(false, c1.checkPlacement(s2, b));
-    assertEquals(true, c1.checkPlacement(s3, b1));
-    assertEquals(false, c1.checkPlacement(s3, b));
-    assertEquals(false, c1.checkPlacement(s4, b1));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", c1.checkPlacement(s2, b));
+    assertEquals(null, c1.checkPlacement(s3, b1));
+    assertEquals("That placement is invalid: the ship goes off the right of the board.", c1.checkPlacement(s3, b));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", c1.checkPlacement(s4, b1));
   }
 
 }

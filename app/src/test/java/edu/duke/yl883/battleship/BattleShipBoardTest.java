@@ -64,11 +64,11 @@ public class BattleShipBoardTest {
     Ship<Character> s3 = f.makeBattleship(new Placement(new Coordinate(3, 1), 'H'));
     Ship<Character> s4 = f.makeBattleship(new Placement(new Coordinate(4, 2), 'V'));
     Ship<Character> s5 = f.makeBattleship(new Placement(new Coordinate(0, 0), 'H'));
-    assertEquals(false, b1.tryAddShip(s1));
-    assertEquals(true, b1.tryAddShip(s2));
-    assertEquals(false, b1.tryAddShip(s3));
-    assertEquals(false, b1.tryAddShip(s4));
-    assertEquals(true, b1.tryAddShip(s5));
-    assertEquals(true, b2.tryAddShip(s1));
+    assertEquals("That placement is invalid: the ship goes off the bottom of the board.", b1.tryAddShip(s1));
+    assertEquals(null, b1.tryAddShip(s2));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", b1.tryAddShip(s3));
+    assertEquals("That placement is invalid: the ship goes off the bottom of the board.", b1.tryAddShip(s4));
+    assertEquals(null, b1.tryAddShip(s5));
+    assertEquals(null, b2.tryAddShip(s1));
   }
 }

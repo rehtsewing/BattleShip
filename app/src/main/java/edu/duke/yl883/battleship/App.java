@@ -4,6 +4,7 @@
 package edu.duke.yl883.battleship;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 

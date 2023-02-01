@@ -1,9 +1,11 @@
 package edu.duke.yl883.battleship;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -39,17 +41,57 @@ public class TextPlayerTest {
       bytes.reset(); // clear out bytes for next time around
     }
   }
+  private void errorHandleHelper (String promptAll, TextPlayer player, ByteArrayOutputStream bytes) throws IOException{
+    String prompt = "Player A where do you want to place a Destroyer?\n";
+    promptAll = prompt + promptAll + prompt; 
+    Placement expected = new Placement(new Coordinate(0, 0), 'V');
+    Board<Character> b1 = new BattleShipBoard<>(10, 20);
+
+    V1ShipFactory f = new V1ShipFactory();
+    player.doOnePlacement("Destroyer", (a)->f.makeDestroyer(a));
+    b1.tryAddShip(f.makeDestroyer(expected));
+    BoardTextView expectedView = new BoardTextView(b1);
+    assertEquals(promptAll + expectedView.displayMyOwnBoard() + "\n", bytes.toString());
+  }
+  
+  @Test
+  void test_all_error_handling() throws IOException {
+    //EOF problem
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10, 20, "", bytes);
+
+    V1ShipFactory f = new V1ShipFactory();
+    assertThrows(EOFException.class, ()->player.doOnePlacement("Destroyer", (a)->f.makeDestroyer(a)));
+
+    //invalid orientation
+    bytes.reset();
+    TextPlayer player1 = createTextPlayer(10, 20, "A0Q\nA0V\n", bytes);
+    String promptAll1 = "That placement is invalid: it does not have the correct format.\n";
+    errorHandleHelper(promptAll1, player1, bytes);
+  
+    //Invalid Placement string
+    bytes.reset();
+    TextPlayer player2 = createTextPlayer(10, 20, "ABV\nA0V\n", bytes);
+    errorHandleHelper(promptAll1, player2, bytes);
+  
+    // tryAddShip problem
+    bytes.reset();
+    TextPlayer player3 = createTextPlayer(10, 20, "A9H\nA0V\n", bytes);
+    String promptAll = "That placement is invalid: the ship goes off the right of the board.\n";
+
+    errorHandleHelper(promptAll, player3, bytes);
+  }
 
   @Test
   void test_do_one_placement() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    TextPlayer player = createTextPlayer(10, 20, "B2V\nC8H\na4v\n", bytes);
+    TextPlayer player = createTextPlayer(10, 20, "B2V\nC3H\na8v\n", bytes);
 
     String prompt = "Player A where do you want to place a Destroyer?\n";
     Placement[] expected = new Placement[3];
     expected[0] = new Placement(new Coordinate(1, 2), 'V');
-    expected[1] = new Placement(new Coordinate(2, 8), 'H');
-    expected[2] = new Placement(new Coordinate(0, 4), 'V');
+    expected[1] = new Placement(new Coordinate(2, 3), 'H');
+    expected[2] = new Placement(new Coordinate(0, 8), 'V');
     Board<Character> b1 = new BattleShipBoard<>(10, 20);
     BoardTextView[] expectedView = new BoardTextView[3];
     V1ShipFactory f = new V1ShipFactory();

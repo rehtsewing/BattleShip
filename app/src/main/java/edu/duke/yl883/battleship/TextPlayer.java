@@ -1,6 +1,7 @@
 package edu.duke.yl883.battleship;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Function;
 
+/** Player pattern in text mode */
 public class TextPlayer {
   /**
    * theBoard is the Board for the App
@@ -68,21 +70,34 @@ public class TextPlayer {
 
   /**
    * Create a Placement object from the information
-   * from information in input reader
+   * from information in input reader and handle
+   * the IllegalArgumentException from placement
+   * constructor
    *
    * @param prompt is the message use as prompt for game
    * @return the Placement object created
+   * @throw EOFException if not enough placement entered
    */
   public Placement readPlacement(String prompt) throws IOException {
     out.println(prompt);
     String s = inputReader.readLine();
+    if(s == null) {
+      throw new EOFException("Not enough placement entered");
+    }
+    try {
+      Placement p = new Placement(s);
+    } catch(IllegalArgumentException e) {
+      out.println("That placement is invalid: it does not have the correct format.");
+      return readPlacement(prompt);
+    }
     return new Placement(s);
   }
 
   /**
    * Read a Placement 
    * Create a ship based on the Placement
-   * Add that ship to the board
+   * Add that ship to the board, redo this process
+   * if previous adding failed
    * Print out the board (to out, not to System.out)
    * @param shipName is type string of the ship
    * @param createFn is an apply method that takes
@@ -91,7 +106,12 @@ public class TextPlayer {
   public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
     Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
     Ship<Character> s = createFn.apply(p);
-    theBoard.tryAddShip(s);
+    String message = theBoard.tryAddShip(s);
+    if(message != null) {
+      out.println(message);
+      doOnePlacement(shipName, createFn);
+      return;
+    }
     out.println(view.displayMyOwnBoard());
   }
 
@@ -99,7 +119,7 @@ public class TextPlayer {
    * (a) Display the starting (empty) board
    * (b) Print the instructions message (from the README,
    *     but also shown again near the top of this file)
-   * (c) Call doOnePlacement to place one ship
+   * (c) Recursively Call doOnePlacement to place all ships
    */
   public void doPlacementPhase() throws IOException {
     out.println(view.displayMyOwnBoard());

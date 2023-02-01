@@ -71,14 +71,16 @@ public class BattleShipBoard<T> implements Board<T> {
    * Try to add the ship to myShips, but 
    * might not succeed
    * @param toAdd is the ship try to be added to the list
-   * @return true if successfully add the ship
+   * @return null if successfully add the ship, error
+   *          message otherwisex
    */
-  public boolean tryAddShip(Ship<T> toAdd) {
-    if(placementChecker.checkPlacement(toAdd, this)) {
+  public String tryAddShip(Ship<T> toAdd) {
+    String message = placementChecker.checkPlacement(toAdd, this);
+    if(message == null) {
       myShips.add(toAdd);
-      return true;
+      return null;
     }
-    return false;
+    return message;
   }
   /**
    * Takes a Coordinate, and sees which (if any) 
