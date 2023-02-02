@@ -58,10 +58,11 @@ public interface Ship<T> {
    * must be part of the ship.
    * 
    * @param where is the coordinate to return information for
+   * @param myShip is true when the ship belongs to my board, otherwise
+   *        belongs to enemy's board
    * @throws IllegalArgumentException if where is not part of the Ship
    * @return The view-specific information at that coordinate.
    */
-  public T getDisplayInfoAt(Coordinate where);
-
+   public T getDisplayInfoAt(Coordinate where, boolean myShip);
 }
 

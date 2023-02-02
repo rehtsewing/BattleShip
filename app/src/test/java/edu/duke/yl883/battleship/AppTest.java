@@ -48,8 +48,8 @@ class AppTest {
   }
   @Test
   void test_do_placement_phase() throws IOException{
-    Board<Character> b1 = new BattleShipBoard<Character>(10, 20);
-    Board<Character> b2 = new BattleShipBoard<Character>(10, 20);
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
     BufferedReader input = new BufferedReader(new StringReader("A0V\nC0H\nA2V\nA3V\nF4V\nA5V\nE6V\nA7V\nA8V\nD9V\nA0V\nC0H\nA2V\nA3V\nF4V\nA5V\nE6V\nA7V\nA8V\nD9V\n"));
     V1ShipFactory factory = new V1ShipFactory();
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();

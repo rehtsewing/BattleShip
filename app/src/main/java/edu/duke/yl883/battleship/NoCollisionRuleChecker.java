@@ -17,7 +17,7 @@ public class NoCollisionRuleChecker<T> extends PlacementRuleChecker<T> {
   @Override
   protected String checkMyRule(Ship<T> theShip, Board<T> theBoard) {
     for(Coordinate c : theShip.getCoordinates()) {
-      T sign = theBoard.whatIsAt(c);
+      T sign = theBoard.whatIsAtForSelf(c);
       if(sign == null) {
         continue;
       }

@@ -20,18 +20,22 @@ public class RectangleShip<T> extends BasicShip<T>{
    *                 upper left corner of the ship
    * @param width is the width of the ship
    * @param height is the height of the ship
-   * @param myDisplayinfo is the display info
+   * @param myDisplayinfo is the display info to self
+   * @param enemyDisplayinfo is the display info to enemy
    */
-  public RectangleShip(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo) {
-    super(makeCoords(upperLeft, width, height), myDisplayInfo);
+  public RectangleShip(String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
+    super(makeCoords(upperLeft, width, height), myDisplayInfo, enemyDisplayInfo);
     this.name = name;
   }
   /**
+   * (For own view display data if not hit
+   * onHit if hit)
+   * 
    * @param data is info for myData
    * @param onHit is info for hit
    */
   public RectangleShip(String name, Coordinate upperLeft, int width, int height, T data, T onHit) {
-    this(name, upperLeft, width, height, new SimpleShipDisplayInfo<T>(data, onHit));
+    this(name, upperLeft, width, height, new SimpleShipDisplayInfo<T>(data, onHit), new SimpleShipDisplayInfo<T>(null, data));
   }
   public RectangleShip(Coordinate upperLeft, T data, T onHit) {
     this("testship", upperLeft, 1, 1, data, onHit);

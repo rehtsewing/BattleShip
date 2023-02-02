@@ -9,7 +9,7 @@ public class V1ShipFactoryTest {
                          char expectedLetter, Coordinate... expectedLocs) {
     assertEquals(expectedName, testShip.getName());
     for(Coordinate c : expectedLocs) {
-      assertEquals(expectedLetter, testShip.getDisplayInfoAt(c));
+      assertEquals(expectedLetter, testShip.getDisplayInfoAt(c, true));
     }
   }
 

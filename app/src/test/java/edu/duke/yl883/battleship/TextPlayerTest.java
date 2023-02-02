@@ -18,7 +18,7 @@ public class TextPlayerTest {
   private TextPlayer createTextPlayer(int w, int h, String inputData, OutputStream bytes) {
     BufferedReader input = new BufferedReader(new StringReader(inputData));
     PrintStream output = new PrintStream(bytes, true);
-    Board<Character> board = new BattleShipBoard<Character>(w, h);
+    Board<Character> board = new BattleShipBoard<Character>(w, h, 'X');
     V1ShipFactory shipFactory = new V1ShipFactory();
     return new TextPlayer("A", board, input, output, shipFactory);
   }
@@ -45,7 +45,7 @@ public class TextPlayerTest {
     String prompt = "Player A where do you want to place a Destroyer?\n";
     promptAll = prompt + promptAll + prompt; 
     Placement expected = new Placement(new Coordinate(0, 0), 'V');
-    Board<Character> b1 = new BattleShipBoard<>(10, 20);
+    Board<Character> b1 = new BattleShipBoard<>(10, 20, 'X');
 
     V1ShipFactory f = new V1ShipFactory();
     player.doOnePlacement("Destroyer", (a)->f.makeDestroyer(a));
@@ -92,7 +92,7 @@ public class TextPlayerTest {
     expected[0] = new Placement(new Coordinate(1, 2), 'V');
     expected[1] = new Placement(new Coordinate(2, 3), 'H');
     expected[2] = new Placement(new Coordinate(0, 8), 'V');
-    Board<Character> b1 = new BattleShipBoard<>(10, 20);
+    Board<Character> b1 = new BattleShipBoard<>(10, 20, 'X');
     BoardTextView[] expectedView = new BoardTextView[3];
     V1ShipFactory f = new V1ShipFactory();
 
@@ -123,7 +123,7 @@ public class TextPlayerTest {
     message.append("3 \"Battleships\" that are 1x4\n");
     message.append("2 \"Carriers\" that are 1x6\n\n");
 
-    Board<Character> b1 = new BattleShipBoard<>(10, 20);
+    Board<Character> b1 = new BattleShipBoard<>(10, 20, 'X');
     V1ShipFactory f = new V1ShipFactory();
     String emptyBoard = (new BoardTextView(b1)).displayMyOwnBoard() + "\n";
     

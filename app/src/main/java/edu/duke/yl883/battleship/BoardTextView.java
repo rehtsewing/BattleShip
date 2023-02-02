@@ -1,5 +1,7 @@
 package edu.duke.yl883.battleship;
 
+import java.util.function.Function;
+
 /**
  * This class handles textual display of
  * a Board (i.e., converting it to a string to show
@@ -31,9 +33,24 @@ public class BoardTextView {
   /**
    * Get the string of own board
    */
-  public String displayMyOwnBoard() {
+   public String displayMyOwnBoard() {
+    return displayAnyBoard((c)->toDisplay.whatIsAtForSelf(c));
+  }
+  /**
+   * Get the string of enemy board
+   */
+   public String displayEnemyBoard() {
+    return displayAnyBoard((c)->toDisplay.whatIsAtForEnemy(c));
+  }
+
+  /**
+   * Get the string of any board
+   * @param getSquareFn if Func used to display
+   * info at coordination in different board
+   */
+  protected String displayAnyBoard(Function<Coordinate, Character> getSquareFn) {
     String h = makeHeader();
-    String m = makeBody(toDisplay);
+    String m = makeBody(getSquareFn);
     return h + m + h;
   }
 
@@ -57,9 +74,11 @@ public class BoardTextView {
   /**
    * This makes the lines for body of board, e.g. A |s| A\n
    * 
+   * @param getSquareFn if Func used to display
+   * info at coordination in different board
    * @return the String that is the body for the given board
    */
-  String makeBody(Board<Character> b) {
+  String makeBody(Function<Coordinate, Character> getSquareFn) {
     StringBuilder ans = new StringBuilder(""); // Start at nothing
     for (int i = 0; i  < toDisplay.getHeight(); i++) {
       String sep=" "; //Start with a space, then switch to | to separate
@@ -69,7 +88,7 @@ public class BoardTextView {
       for (int j = 0; j < toDisplay.getWidth(); j++) {
         String sign = " "; //The sign of which specific coordinate
         Coordinate c = new Coordinate(i, j);
-        if(b.whatIsAt(c) != null) sign = b.whatIsAt(c).toString(); 
+        if(getSquareFn.apply(c) != null) sign = getSquareFn.apply(c).toString(); 
         ans.append(sep);
         ans.append(sign);
         sep = "|";

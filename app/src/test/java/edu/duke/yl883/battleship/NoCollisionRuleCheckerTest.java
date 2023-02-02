@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 public class NoCollisionRuleCheckerTest {
   @Test
   public void test_no_collision() {
-    BattleShipBoard<Character> b = new BattleShipBoard<>(4, 4);
-    BattleShipBoard<Character> b1 = new BattleShipBoard<>(6, 5, new InBoundsRuleChecker<Character>(null));
+    BattleShipBoard<Character> b = new BattleShipBoard<>(4, 4, 'X');
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(6, 5, new InBoundsRuleChecker<Character>(null), 'X');
     V1ShipFactory f = new V1ShipFactory();
     Ship<Character> s1 = f.makeBattleship(new Placement(new Coordinate(3, 0), 'H'));
     Ship<Character> s2 = f.makeBattleship(new Placement(new Coordinate(0, 3), 'V'));
@@ -22,8 +22,8 @@ public class NoCollisionRuleCheckerTest {
   }
   @Test
   public void test_chain() {
-    BattleShipBoard<Character> b = new BattleShipBoard<>(4, 4);
-    BattleShipBoard<Character> b1 = new BattleShipBoard<>(6, 6, new InBoundsRuleChecker<Character>(null));
+    BattleShipBoard<Character> b = new BattleShipBoard<>(4, 4, 'X');
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(6, 6, new InBoundsRuleChecker<Character>(null), 'X');
     V1ShipFactory f = new V1ShipFactory();
     Ship<Character> s1 = f.makeBattleship(new Placement(new Coordinate(3, 0), 'H'));
     Ship<Character> s2 = f.makeBattleship(new Placement(new Coordinate(0, 3), 'V'));

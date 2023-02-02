@@ -48,7 +48,7 @@ public class RectangleShipTest {
   public void test_invalid_where() {
     Coordinate c1 = new Coordinate(2, 2);
     RectangleShip<Character> rShip = new RectangleShip<Character>("submarine", c1, 4, 1, 's', '*');
-    assertThrows(IllegalArgumentException.class, ()->rShip.getDisplayInfoAt(new Coordinate(1, 2)));
+    assertThrows(IllegalArgumentException.class, ()->rShip.getDisplayInfoAt(new Coordinate(1, 2), true));
     assertThrows(IllegalArgumentException.class, ()->rShip.recordHitAt(new Coordinate(3, 2)));
     assertThrows(IllegalArgumentException.class, ()->rShip.wasHitAt(new Coordinate(1, 3)));
     assertThrows(IllegalArgumentException.class, ()->rShip.wasHitAt(new Coordinate(2, 6)));
@@ -78,9 +78,11 @@ public class RectangleShipTest {
     Coordinate c1 = new Coordinate(2, 2);
     RectangleShip<Character> rShip = new RectangleShip<Character>("carrier", c1, 1, 2, 's', '*');
     rShip.recordHitAt(c1);
-    assertEquals('*', rShip.getDisplayInfoAt(c1));
+    assertEquals('s', rShip.getDisplayInfoAt(c1, false));
+    assertEquals('*', rShip.getDisplayInfoAt(c1, true));
     Coordinate c2 = new Coordinate(3, 2);
-    assertEquals('s', rShip.getDisplayInfoAt(c2));
+    assertEquals(null, rShip.getDisplayInfoAt(c2, false));
+    assertEquals('s', rShip.getDisplayInfoAt(c2, true));
   }
   @Test
   public void test_get_coordinates() {

@@ -12,24 +12,29 @@ public abstract class BasicShip<T> implements Ship<T> {
    */
   protected HashMap<Coordinate, Boolean> myPieces;
   /** 
-   * Display info of the ship
+   * Display info of the ship to me
    */
   protected ShipDisplayInfo<T> myDisplayInfo;
-
+  /** 
+   * Display info of the ship to enemy
+   */
+  protected ShipDisplayInfo<T> enemyDisplayInfo;
   /**
    * Constructs a BasicShip with specified coordinate
    * Iterable
    * 
    * @param where is the Iterable of pieces' coordinate
    *           in the newly constructed basic ship.
-   * @param myDisplayInfo is the display info of the ship
+   * @param myDisplayInfo is display info of the ship to self
+   * @param enemyDisplayInfo is display info of the ship to enemy
    */
-  public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
+  public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
     myPieces = new HashMap<Coordinate, Boolean>();
     for(Coordinate c: where) {
       myPieces.put(c, false);
     }
     this.myDisplayInfo = myDisplayInfo;
+    this.enemyDisplayInfo = enemyDisplayInfo;
   }
   /**
    * Check if the given coordinate is part of
@@ -79,9 +84,14 @@ public abstract class BasicShip<T> implements Ship<T> {
   }
   /** {@inheritDoc} */
   @Override
-  public T getDisplayInfoAt(Coordinate where) {
+  public T getDisplayInfoAt(Coordinate where, boolean myShip) {
     checkCoordinateInThisShip(where);
-    return myDisplayInfo.getInfo(where, myPieces.get(where));
+    if(myShip) {
+      return myDisplayInfo.getInfo(where, myPieces.get(where));
+    } else {
+      return enemyDisplayInfo.getInfo(where, myPieces.get(where));
+    }
   }
+    
 
 }
