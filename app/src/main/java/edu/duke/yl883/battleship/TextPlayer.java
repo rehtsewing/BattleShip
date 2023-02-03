@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Function;
@@ -12,14 +13,16 @@ import java.util.function.Function;
 /** Player pattern in text mode */
 public class TextPlayer {
   /**
-   * theBoard is the Board for the App
+   * theBoard is the my own Board for the App
+   * enemyBoard is the enemy Board for the App
    * view is the Text view of the board
+   * enemyView is the Text view of the enemy board
    * inputReader is a bufferedReader of the App
    * out is the stream to be printed to
    * shipFactory is object to make ship
    */
-  final Board<Character> theBoard;
-  final BoardTextView view;
+  final Board<Character> theBoard, enemyBoard;
+  final BoardTextView view, enemyView;
   final BufferedReader inputReader;
   final PrintStream out;
   final AbstractShipFactory<Character> shipFactory;
@@ -41,10 +44,12 @@ public class TextPlayer {
    * @param out         is the out stream for current player
    * @param f is version 1 ship factory of current player 
    */
-  public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V1ShipFactory f) {
+  public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V1ShipFactory f, Board<Character> enemyBoard) {
     this.name = name;
     this.theBoard = theBoard;
+    this.enemyBoard = enemyBoard;
     this.view = new BoardTextView(theBoard);
+    this.enemyView = new BoardTextView(enemyBoard);
     this.inputReader = input;
     this.out = out;
     this.shipFactory = f;
@@ -92,7 +97,6 @@ public class TextPlayer {
     }
     return new Placement(s);
   }
-
   /**
    * Read a Placement 
    * Create a ship based on the Placement

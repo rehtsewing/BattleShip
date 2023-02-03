@@ -1,5 +1,6 @@
 package edu.duke.yl883.battleship;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -29,7 +30,6 @@ public class BoardTextView {
           "Board must be no larger than 10x26, but is " + toDisplay.getWidth() + "x" + toDisplay.getHeight());
     }
   }
-
   /**
    * Get the string of own board
    */
@@ -100,5 +100,43 @@ public class BoardTextView {
     return ans.toString();
   }
 
+  /**
+   * Display board together with enemy board
+   * @param enemyView is view info of enemy board
+   * @param myHeader is header info of my board
+   * @param enemyHeader is header info of enemy board
+   */
+  public String displayMyBoardWithEnemyNextToIt(BoardTextView enemyView, String myHeader, String enemyHeader) {
+    String [] ownLines = displayMyOwnBoard().split("\n");
+    String [] enemyLines = enemyView.displayEnemyBoard().split("\n");
+    StringBuilder res = new StringBuilder("     ");
+    int width = toDisplay.getWidth();
+    int height = toDisplay.getHeight();
+    makeMyAndEnemyHeader(myHeader, enemyHeader, width, res);
+    
+    char[] bodyBlankMid = new char[16];
+    Arrays.fill(bodyBlankMid, ' ');
+    for(int i = 0; i < height + 2; i++) {
+      res.append(ownLines[i]);
+      res.append(bodyBlankMid);
+      if(i == 0 || i == height + 1) res.append("  ");
+      res.append(enemyLines[i] + "\n");
+    }
+    return res.toString();
+  }
+  /**
+   * Make the header line of the two board 
+   * side by side
+   * @param myHeader is header info of my board
+   * @param enemyHeader is header info of enemy board
+   * @param res is the StringBuilder of the result string
+   */
+  private void makeMyAndEnemyHeader(String myHeader, String enemyHeader, int width, StringBuilder res) {
+    char[] headerBlankMid = new char[2*width+17-myHeader.length()];
+    Arrays.fill(headerBlankMid, ' ');
+    res.append(myHeader);
+    res.append(headerBlankMid);
+    res.append(enemyHeader + "\n");
+  }
 
 }

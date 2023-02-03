@@ -56,8 +56,8 @@ class AppTest {
     PrintStream output = new PrintStream(bytes, true);
     ByteArrayOutputStream bytes1 = new ByteArrayOutputStream();
     PrintStream output1 = new PrintStream(bytes1, true);
-    TextPlayer p1 = new TextPlayer("A", b1, input, output, factory);
-    TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory);
+    TextPlayer p1 = new TextPlayer("A", b1, input, output, factory, b2);
+    TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory, b1);
 
     App app = new App(p1, p2);
     app.doPlacementPhase();

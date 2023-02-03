@@ -115,4 +115,30 @@ public class BoardTextViewTest {
     assertEquals(myView, view.displayMyOwnBoard());
     assertEquals(enemyView, view.displayEnemyBoard());
   }
+  @Test
+  public void test_display_board_with_enemy_nexttoit() {
+    Board<Character> b1 = new BattleShipBoard<Character>(4, 2, 'X');
+    Board<Character> b2 = new BattleShipBoard<Character>(4, 2, 'X');
+    Coordinate c = new Coordinate(0, 0);
+    Coordinate c1 = new Coordinate(1, 1);
+    V1ShipFactory f = new V1ShipFactory();
+    Ship<Character> s = f.makeSubmarine(new Placement(c, 'H'));
+    Ship<Character> s1 = f.makeDestroyer(new Placement(c1, 'H'));
+    
+    b1.tryAddShip(s);
+    b1.tryAddShip(s1);
+    b1.fireAt(new Coordinate(0, 0));
+    b2.fireAt(new Coordinate(1, 0));
+    BoardTextView view = new BoardTextView(b1);
+    BoardTextView enemyView = new BoardTextView(b2);
+    
+   String myView =
+     "     Your ocean               Player B's ocean\n" +
+     "  0|1|2|3                    0|1|2|3\n" + 
+     "A *|s| |  A                A  | | |  A\n"+
+     "B  |d|d|d B                B X| | |  B\n"+
+     "  0|1|2|3                    0|1|2|3\n";
+
+    assertEquals(myView, view.displayMyBoardWithEnemyNextToIt(enemyView, "Your ocean", "Player B's ocean"));
+  }
 }
