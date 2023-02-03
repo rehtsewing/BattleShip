@@ -146,5 +146,22 @@ public class TextPlayerTest {
       message.append(expectedView.displayMyOwnBoard() + "\n");
     }
   }
-
+  @Test
+  void test_is_lose() throws IOException{
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    BufferedReader input = new BufferedReader(new StringReader("B2V\n"));
+    PrintStream output = new PrintStream(bytes, true);
+    Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');
+    V1ShipFactory shipFactory = new V1ShipFactory();
+    
+    TextPlayer player = new TextPlayer("A", board, input, output, shipFactory, board);
+    V1ShipFactory f = new V1ShipFactory();
+    player.doOnePlacement("Destroyer", (a)->f.makeDestroyer(a));
+    board.fireAt(new Coordinate(1, 2));
+    board.fireAt(new Coordinate(2, 2));
+    assertEquals(false, player.isWin());
+    board.fireAt(new Coordinate(3, 2));
+    assertEquals(true, player.isWin());
+  }
+    
 }

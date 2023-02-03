@@ -100,4 +100,19 @@ public class BattleShipBoardTest {
     b1.fireAt(new Coordinate(3, 1));
     assertEquals('X', b1.whatIsAtForEnemy(new Coordinate(3, 1)));
   }
+  @Test
+  public void test_lose_check() {
+    int wid = 5;
+    int col = 6;
+    V1ShipFactory f = new V1ShipFactory();
+    Ship<Character> s1 = f.makeDestroyer(new Placement(new Coordinate(3, 0), 'V'));
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
+    b1.tryAddShip(s1); //return a string if add ship failed
+    b1.fireAt(new Coordinate(3, 0));
+    assertEquals(false, b1.loseCheck());
+    b1.fireAt(new Coordinate(4, 0));
+    assertEquals(false, b1.loseCheck());
+    b1.fireAt(new Coordinate(5, 0));
+    assertEquals(true, b1.loseCheck());
+  }
 }

@@ -140,4 +140,16 @@ public class TextPlayer {
       doOnePlacement(name, shipCreationFns.get(name));
     }
   }
+  /**
+   * Check for the win/lose of the player
+   * @return true if this player win
+   *        false if not win yet 
+   */
+  public boolean isWin() {
+    if(enemyBoard.loseCheck()) {
+      out.println("Player " + name + " win the game!");
+      return true;
+    }
+    return false;
+  }
 }
