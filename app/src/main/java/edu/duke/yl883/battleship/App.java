@@ -4,11 +4,10 @@
 package edu.duke.yl883.battleship;
 
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**c- Highest level structure of battleship game */
+/** Highest level structure of battleship game */
 public class App {
   /** Two textplayer of the game*/
   final TextPlayer player1, player2; 
@@ -30,6 +29,22 @@ public class App {
     player1.doPlacementPhase();
     player2.doPlacementPhase();
   }
+  /** 
+   * Handle player1 and player 2 to
+   * do attack until the game end
+   */
+  public void doAttackingPhase() throws IOException{
+    while(true) {
+      player1.playOneTurn();
+      if(player1.isWin()) {
+        break;
+      }
+      player2.playOneTurn();
+      if(player2.isWin()) {
+        break;
+      }
+    }
+  }
 
   public static void main(String[] args) throws IOException {
     Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
@@ -41,5 +56,6 @@ public class App {
 
     App app = new App(p1, p2);
     app.doPlacementPhase();
+    app.doAttackingPhase();
   }
 }

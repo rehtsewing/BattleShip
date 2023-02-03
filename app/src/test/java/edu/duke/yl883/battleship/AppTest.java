@@ -64,4 +64,73 @@ class AppTest {
     assertEquals(bytes.toString(), bytes1.toString());
   }
 
+  @Test
+  void test_do_attack_phase_player2_win() throws IOException{
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
+    BufferedReader input = new BufferedReader(new StringReader("C2\nC0\nC0\nC1\n"));
+    V1ShipFactory factory = new V1ShipFactory();
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream output = new PrintStream(bytes, true);
+    ByteArrayOutputStream bytes1 = new ByteArrayOutputStream();
+    PrintStream output1 = new PrintStream(bytes1, true);
+    b1.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    b2.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    TextPlayer p1 = new TextPlayer("A", b1, input, output, factory, b2);
+    TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory, b1);
+
+    App app = new App(p1, p2);
+
+    Board<Character> b3 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b4 = new BattleShipBoard<Character>(10, 20, 'X');
+    b3.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    b4.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    BoardTextView expectedView = new BoardTextView(b4);
+    StringBuilder res = new StringBuilder();
+    res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
+    String prompt = "Player A where do you want to fire at?\n" + "You hit a Submarine!\n\n";
+    res.append(prompt);
+    b4.fireAt(new Coordinate(2, 0));
+
+    res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
+    res.append(prompt);
+    b4.fireAt(new Coordinate(2, 1));
+
+    res.append("Player A win the game!\n");
+    
+    app.doAttackingPhase();
+    assertEquals(bytes1.toString(), res.toString());
+  }
+
+  @Test
+  void test_do_attack_phase_player1_win() throws IOException{
+    Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
+    BufferedReader input = new BufferedReader(new StringReader("C2\n"));
+    V1ShipFactory factory = new V1ShipFactory();
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream output = new PrintStream(bytes, true);
+    ByteArrayOutputStream bytes1 = new ByteArrayOutputStream();
+    PrintStream output1 = new PrintStream(bytes1, true);
+    b1.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    TextPlayer p1 = new TextPlayer("A", b1, input, output, factory, b2);
+    TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory, b1);
+
+    App app = new App(p1, p2);
+
+    Board<Character> b3 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b4 = new BattleShipBoard<Character>(10, 20, 'X');
+    b3.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    BoardTextView expectedView = new BoardTextView(b3);
+    StringBuilder res = new StringBuilder();
+    res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
+    String prompt = "Player A where do you want to fire at?\n" + "You missed!\n\n";
+    res.append(prompt);
+    b3.fireAt(new Coordinate(2, 0));
+
+    res.append("Player A win the game!\n");
+    
+    app.doAttackingPhase();
+    assertEquals(bytes.toString(), res.toString());
+  }
 }

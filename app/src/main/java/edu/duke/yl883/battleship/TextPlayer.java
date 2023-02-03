@@ -75,9 +75,8 @@ public class TextPlayer {
 
   /**
    * Create a Placement object from the information
-   * from information in input reader and handle
-   * the IllegalArgumentException from placement
-   * constructor
+   * in input reader and handle the IllegalArgumentException 
+   * from placement constructor
    *
    * @param prompt is the message use as prompt for game
    * @return the Placement object created
@@ -152,4 +151,47 @@ public class TextPlayer {
     }
     return false;
   }
+  /**
+   * Display board relevant information
+   * Read a Coordinate
+   * Get a ship by firing at the coordinate
+   * Print relevant info according to the gotten ship
+   */
+  public void playOneTurn() throws IOException {
+    out.println("Player " + name + "'s turn:");
+    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Enemy's Ocean"));
+    Coordinate c = readCoordinate("Player " + name + " where do you want to fire at?");
+    Ship<Character> s = enemyBoard.fireAt(c);
+    if(s != null) {
+      out.println("You hit a " + s.getName() + "!\n");
+    } else {
+      out.println("You missed!\n");
+    }
+  }
+
+  /**
+   * Create a Coordinate object from the information
+   * in input reader and handle the IllegalArgumentException 
+   * from coordinate constructor
+   *
+   * @param prompt is the message use as prompt for attacking
+   * @return the Coordinate object created
+   * @throw EOFException if not enough coordinate entered
+   */
+
+  public Coordinate readCoordinate(String prompt) throws IOException {
+    out.println(prompt);
+    String s = inputReader.readLine();
+    if(s == null) {
+      throw new EOFException("Not enough coordinate entered");
+    }
+    try {
+      Coordinate c = new Coordinate(s);
+    } catch(IllegalArgumentException e) {
+      out.println("That coordinate is invalid: it does not have the correct format.");
+      return readCoordinate(prompt);
+    }
+    return new Coordinate(s);
+  }
+
 }
