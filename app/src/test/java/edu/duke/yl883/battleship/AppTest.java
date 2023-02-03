@@ -44,7 +44,6 @@ class AppTest {
     String expected = new String(expectedStream.readAllBytes());
     String actual = bytes.toString();
     assertEquals(expected, actual);
-
   }
   @Test
   void test_do_placement_phase() throws IOException{

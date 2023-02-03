@@ -41,6 +41,7 @@ public class Coordinate {
     if (descr.length() != 2) {
       throw new IllegalArgumentException("Length of the string taken should be equal to 2 but is " + descr.length());
     }
+    descr = descr.toUpperCase();
     char colLetter = descr.charAt(1);
     char rowLetter = descr.charAt(0);
     if (colLetter < '0' || colLetter > '9') {
