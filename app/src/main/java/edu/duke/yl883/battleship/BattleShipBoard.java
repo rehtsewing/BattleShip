@@ -30,7 +30,8 @@ public class BattleShipBoard<T> implements Board<T> {
   /** PLacement rule check of the board*/
   private final PlacementRuleChecker<T> placementChecker;
   /** Record the where enemy has missed*/
-  HashSet<Coordinate> enemyMisses;
+  /** Points hidden to enemy*/
+  HashSet<Coordinate> enemyMisses, hidePoints;
   /** Sign for missed information*/
   final T missInfo;
   /**
@@ -56,6 +57,7 @@ public class BattleShipBoard<T> implements Board<T> {
     this.myShips = new ArrayList<Ship<T>>();
     this.placementChecker = pChecker;
     this.enemyMisses = new HashSet<Coordinate>();
+    this.hidePoints = new HashSet<Coordinate>();
     this.missInfo = missInfo;
     this.movedShips = new ArrayList<Ship<T>>();
   }
@@ -96,6 +98,19 @@ public class BattleShipBoard<T> implements Board<T> {
     return message;
   }
   
+  /**
+   * Try to add the moved ship to myShips, which hidden
+   * to enemy, but might not succeed
+   * @param toAdd is the ship try to be added to the list
+   * @return null if successfully add the ship, error
+   *          message otherwisex
+   */
+  public String tryAddHideShip(Ship<T> toAdd) {
+    for(Coordinate c : toAdd.getCoordinates()) {
+      if(toAdd.wasHitAt(c)) hidePoints.add(c);
+    }
+    return tryAddShip(toAdd);
+  }
   /**
    * Takes a Coordinate, and sees which (if any) 
    * Ship in own board occupies that coordinate
@@ -143,6 +158,7 @@ public class BattleShipBoard<T> implements Board<T> {
     }
     for (Ship<T> s: myShips) {
       if (s.occupiesCoordinates(where)){
+        if(!isSelf && hidePoints.contains(where)) return null;
         return s.getDisplayInfoAt(where, isSelf);
       }
     }
@@ -159,7 +175,8 @@ public class BattleShipBoard<T> implements Board<T> {
     for(Ship<T> s: myShips) {
       if(s.occupiesCoordinates(c)) {
         s.recordHitAt(c);
-        if(enemyMisses.contains(c)) enemyMisses.remove(c); 
+        if(enemyMisses.contains(c)) enemyMisses.remove(c);
+        if(hidePoints.contains(c)) hidePoints.remove(c);
         return s;
       }
     }

@@ -267,7 +267,7 @@ public class TextPlayer {
       Ship<Character> mid = defaultOriShip(s);
       Placement p = readPlacement("Player " + name + " where do you want to place this " + s.getName() + "?\n", shipCreationVersion.get(s.getName()));
       Ship<Character> res = shipAfterMove(mid, p.getWhere(), p.getOrientation());
-      String message = theBoard.tryAddShip(res);
+      String message = theBoard.tryAddHideShip(res);
       if(message != null) {
         out.println(message);
         moveTo(s);
