@@ -11,6 +11,16 @@ public interface Ship<T> {
    * @return the name of this ship
    */
   public String getName();
+  /**
+   * Get orientation of this Ship, such as "submarine".
+   * @return the orientation of this ship
+   */
+  public char getOrientation();
+  /**
+   * Get top left corner of this Ship, such as "submarine".
+   * @return the top left corner of this ship
+   */
+  public Coordinate getTopLeft();
  /**
    * Get all of the Coordinates that this Ship occupies.
    * @return An Iterable with the coordinates that this Ship occupies
@@ -63,6 +73,12 @@ public interface Ship<T> {
    * @throws IllegalArgumentException if where is not part of the Ship
    * @return The view-specific information at that coordinate.
    */
-   public T getDisplayInfoAt(Coordinate where, boolean myShip);
+  public T getDisplayInfoAt(Coordinate where, boolean myShip);
+  /**
+   * Get diagonal of the topleft corner in the ship
+   * @return coordinate of the diagonal 
+   */
+  public Coordinate getDiagonal();
+
 }
 

@@ -71,7 +71,6 @@ public class Coordinate {
   public int getColumn() {
     return column;
   }
-
   /**
    * Override method equals from what
    * inherited from Object

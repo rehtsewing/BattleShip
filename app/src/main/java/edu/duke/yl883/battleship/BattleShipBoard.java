@@ -2,6 +2,7 @@
 package edu.duke.yl883.battleship;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -22,6 +23,10 @@ public class BattleShipBoard<T> implements Board<T> {
    * ArrayList of ships on the board
    */
   final ArrayList<Ship<T>> myShips;
+  /**
+   * ArrayList of ships has been moved by player
+   */
+  final ArrayList<Ship<T>> movedShips;
   /** PLacement rule check of the board*/
   private final PlacementRuleChecker<T> placementChecker;
   /** Record the where enemy has missed*/
@@ -52,6 +57,7 @@ public class BattleShipBoard<T> implements Board<T> {
     this.placementChecker = pChecker;
     this.enemyMisses = new HashSet<Coordinate>();
     this.missInfo = missInfo;
+    this.movedShips = new ArrayList<Ship<T>>();
   }
   public BattleShipBoard(int w, int h, T missInfo) {
     this(w, h, new InBoundsRuleChecker<T>(new NoCollisionRuleChecker<T>(null)), missInfo);
@@ -127,18 +133,24 @@ public class BattleShipBoard<T> implements Board<T> {
    *         missInfo if recorded in enemyMiss and is enemy
    */
   protected T whatIsAt(Coordinate where, boolean isSelf) {
+    if(!isSelf) {
+      for(Ship<T> s : movedShips) {
+        if(s.occupiesCoordinates(where)) {
+          if(s.wasHitAt(where)) return s.getDisplayInfoAt(where, isSelf); 
+        }
+      }
+      if(enemyMisses.contains(where)) return missInfo;
+    }
     for (Ship<T> s: myShips) {
       if (s.occupiesCoordinates(where)){
         return s.getDisplayInfoAt(where, isSelf);
       }
     }
-    if(!isSelf) {
-      if(enemyMisses.contains(where)) return missInfo;
-    }
     return null;
   }
   /**
    * Search for any ship that occupies coordinate c
+   * and record the hit, if no such ship, record the miss
    * @param c is coordinate chose to be fired at
    * @return ship if it is been fired, null if no
    * ship at the coordinate.
@@ -147,10 +159,27 @@ public class BattleShipBoard<T> implements Board<T> {
     for(Ship<T> s: myShips) {
       if(s.occupiesCoordinates(c)) {
         s.recordHitAt(c);
+        if(enemyMisses.contains(c)) enemyMisses.remove(c); 
         return s;
       }
     }
     enemyMisses.add(c);
+    return null;
+  }
+  /**
+   * Take out the ship that occupies coordinate c
+   * @param c is coordinate
+   * @return ship that contains the coordinate or
+   *         null if no such ship
+   */
+  public Ship<T> takeoutShip(Coordinate c) {
+    for(int i = 0; i < myShips.size(); i++) {
+      Ship<T> s = myShips.get(i);
+      if(s.occupiesCoordinates(c)) {
+        movedShips.add(s);
+        return myShips.remove(i);
+      }
+    }
     return null;
   }
   /**

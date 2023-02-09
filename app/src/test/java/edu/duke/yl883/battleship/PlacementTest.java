@@ -59,25 +59,53 @@ public class PlacementTest {
   }
  @Test
   void test_string_constructor_valid_cases() {
-    Placement p1 = new Placement("B3V");
+   Placement p1 = new Placement("B3V", false);
     Coordinate c1 = new Coordinate("B3");
     Placement p2 = new Placement(c1, 'V');
     assertEquals(p1, p2);
-    Placement p3 = new Placement("D5h");
+    Placement p3 = new Placement("D5h", false);
     Coordinate c2 = new Coordinate("D5");
     Placement p4 = new Placement(c2, 'H');
     assertEquals(p3, p4);
+    //version 2
+    Placement p5 = new Placement("A5u", true);
+    Coordinate c3 = new Coordinate("A5");
+    Placement p6 = new Placement(c3, 'U');
+    assertEquals(p5, p6);
+    Placement p7 = new Placement("D2R", true);
+    Coordinate c4 = new Coordinate("D2");
+    Placement p8 = new Placement(c4, 'R');
+    assertEquals(p7, p8);
+    Placement p9 = new Placement("E0d", true);
+    Coordinate c5 = new Coordinate("E0");
+    Placement p10 = new Placement(c5, 'D');;
+    assertEquals(p9, p10);
+    Placement p11 = new Placement("F9L", true);
+    Coordinate c6 = new Coordinate("F9");
+    Placement p12 = new Placement(c6, 'L');
+    assertEquals(p11, p12);
   }
   @Test
   public void test_string_constructor_error_cases() {
-    assertThrows(IllegalArgumentException.class, () -> new Placement("D51"));
-    assertThrows(IllegalArgumentException.class, () -> new Placement("AA"));
-    assertThrows(IllegalArgumentException.class, () -> new Placement("@"));
-    assertThrows(IllegalArgumentException.class, () -> new Placement("[0V"));
-    assertThrows(IllegalArgumentException.class, () -> new Placement("A1VV"));
-    assertThrows(IllegalArgumentException.class, () -> new Placement("[2H"));
-    assertThrows(IllegalArgumentException.class, () -> new Placement(""));
-    assertThrows(IllegalArgumentException.class, () -> new Placement("01H"));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("D5U", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("D51", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("AA", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("@", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("[0V", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("A1VV", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("[2H", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("", false));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("01H", false));
+    //version 2
+    assertThrows(IllegalArgumentException.class, () -> new Placement("D5V", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("D5H", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("AA", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("@", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("[0U", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("A1RR", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("[2R", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("", true));
+    assertThrows(IllegalArgumentException.class, () -> new Placement("01D", true));
   }
 
 }

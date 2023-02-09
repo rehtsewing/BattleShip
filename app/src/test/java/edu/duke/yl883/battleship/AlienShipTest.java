@@ -30,8 +30,7 @@ public class AlienShipTest {
     Coordinate c = new Coordinate(1, 2);
     HashSet<Coordinate> vacant = new HashSet<>();
     vacant.add(new Coordinate(2, 2));
-    AlienShip<Character> rShip = new AlienShip<Character>(vacant, "submarine", c, 2, 3, 's', '*');
-
+    AlienShip<Character> rShip = new AlienShip<Character>('U', vacant, "submarine", c, 2, 3, 's', '*');
     Coordinate c1 = new Coordinate(3, 2);
     Coordinate c2 = new Coordinate(2, 2);
 
@@ -46,7 +45,7 @@ public class AlienShipTest {
     HashSet<Coordinate> vacant = new HashSet<>();
     vacant.add(new Coordinate(3, 2));
     vacant.add(new Coordinate(3, 5));
-    AlienShip<Character> rShip = new AlienShip<Character>(vacant, "carrier", c1, 4, 2, 's', '*');
+    AlienShip<Character> rShip = new AlienShip<Character>('U', vacant, "carrier", c1, 4, 2, 'c', '*');
     Coordinate h1 = new Coordinate(2, 3);
     Coordinate h2 = new Coordinate(3, 4);
     rShip.recordHitAt(h1);
@@ -61,7 +60,7 @@ public class AlienShipTest {
     HashSet<Coordinate> vacant = new HashSet<>();
     vacant.add(new Coordinate(3, 2));
     vacant.add(new Coordinate(3, 5));
-    AlienShip<Character> rShip = new AlienShip<Character>(vacant, "submarine", c1, 4, 2, 's', '*');
+    AlienShip<Character> rShip = new AlienShip<Character>('U', vacant, "submarine", c1, 4, 2, 's', '*');
     assertThrows(IllegalArgumentException.class, ()->rShip.getDisplayInfoAt(new Coordinate(1, 2), true));
     assertThrows(IllegalArgumentException.class, ()->rShip.recordHitAt(new Coordinate(3, 2)));
     assertThrows(IllegalArgumentException.class, ()->rShip.wasHitAt(new Coordinate(1, 3)));
@@ -75,7 +74,7 @@ public class AlienShipTest {
     HashSet<Coordinate> vacant = new HashSet<>();
     vacant.add(new Coordinate(2, 3));
     vacant.add(new Coordinate(1, 4));
-    AlienShip<Character> rShip = new AlienShip<Character>(vacant, "carrier", c1, 2, 2, 's', '*');
+    AlienShip<Character> rShip = new AlienShip<Character>('U', vacant, "carrier", c1, 2, 2, 'c', '*');
     rShip.recordHitAt(c1);
     assertEquals(false, rShip.isSunk());
     rShip.recordHitAt(new Coordinate(2, 4));
@@ -87,7 +86,7 @@ public class AlienShipTest {
     Coordinate c1 = new Coordinate(2, 2);
     HashSet<Coordinate> vacant = new HashSet<>();
     vacant.add(new Coordinate(3, 2));
-    RectangleShip<Character> rShip = new RectangleShip<Character>("carrier", c1, 2, 2, 's', '*');
+    AlienShip<Character> rShip = new AlienShip<Character>('U', vacant, "carrier", c1, 2, 2, 's', '*');
     rShip.recordHitAt(c1);
     assertEquals('s', rShip.getDisplayInfoAt(c1, false));
     assertEquals('*', rShip.getDisplayInfoAt(c1, true));
@@ -102,11 +101,23 @@ public class AlienShipTest {
     Coordinate c2 = new Coordinate(3, 2);
     HashSet<Coordinate> vacant = new HashSet<>();
     vacant.add(new Coordinate(4, 2));
-    AlienShip<Character> rShip = new AlienShip<Character>(vacant, "carrier", c1, 1, 3, 's', '*');
+    AlienShip<Character> rShip = new AlienShip<Character>('U',vacant, "carrier", c1, 1, 3, 'c', '*');
     HashSet<Coordinate> s = new HashSet<>();
     s.add(c1);
     s.add(c2);
     assertEquals(s, rShip.getCoordinates());
+  }
+  @Test
+  public void test_get_diagonal() {
+    Coordinate c1 = new Coordinate(2, 2);
+    Coordinate c2 = new Coordinate(3, 2);
+    Coordinate c3 = new Coordinate(4, 2);
+    HashSet<Coordinate> vacant = new HashSet<>();
+    vacant.add(c1);
+    AlienShip<Character> rShip = new AlienShip<Character>('U',vacant, "carrier", c1, 2, 3, 'c', '*');
+    Coordinate res = rShip.getDiagonal();
+    Coordinate expected = new Coordinate(4, 3);
+    assertEquals(expected, res);
   }
 
 }

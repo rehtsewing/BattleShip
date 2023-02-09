@@ -27,7 +27,7 @@ public class V2ShipFactory implements AbstractShipFactory<Character>  {
       w = h;
       h = temp;
     }
-    Ship<Character> s = new AlienShip<Character>(actualVacant, name, where.getWhere(), w, h, letter, '*');
+    Ship<Character> s = new AlienShip<Character>(ori, actualVacant, name, where.getWhere(), w, h, letter, '*');
     return s;
   }
   /**
@@ -41,7 +41,7 @@ public class V2ShipFactory implements AbstractShipFactory<Character>  {
    * @throws IllegalArgumentException if orientation letter is not
    *         R or D or L or U
    */
-  private Coordinate applyOrientation(Coordinate topLeft, char ori, Coordinate c, int w, int h) {
+  public Coordinate applyOrientation(Coordinate topLeft, char ori, Coordinate c, int w, int h) {
     int row = topLeft.getRow();
     int col = topLeft.getColumn();
     if (ori == 'R') {
@@ -56,12 +56,9 @@ public class V2ShipFactory implements AbstractShipFactory<Character>  {
     } else if(ori == 'U') {
       row += c.getRow();
       col += c.getColumn();
-    } else {
-      throw new IllegalArgumentException("Invalid orientation letter " + ori);
     }
     return new Coordinate(row, col);
   }
-  
   /** {@inheritDoc} */
   @Override
   public Ship<Character> makeSubmarine(Placement where) {
@@ -94,5 +91,5 @@ public class V2ShipFactory implements AbstractShipFactory<Character>  {
     V1ShipFactory f = new V1ShipFactory();
     return f.makeDestroyer(where);
   }
-
+  
 }

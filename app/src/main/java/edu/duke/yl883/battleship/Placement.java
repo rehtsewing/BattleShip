@@ -31,12 +31,14 @@ public class Placement {
    * "A2V"
    * 
    * @param descr is the string taken to construct the placement
+   * @param version2 indicate whether this placement used for
+   *        version2 ship or not
    * @throws IllegalArgumentException if length of the string  
    *      smaller than 1 
    * @throws IllegalArgumentException if orientation letter is not
    *      either H or V
    */  
-  public Placement(String descr) {
+  public Placement(String descr, boolean version2) {
     descr = descr.toUpperCase();
     if (descr.length() < 1) {
       throw new IllegalArgumentException("String of the placement should be longer but is " + descr.length());
@@ -44,8 +46,11 @@ public class Placement {
     String coorDescr = descr.substring(0, descr.length() - 1);
     Coordinate w = new Coordinate(coorDescr);
     char oriLetter = descr.charAt(descr.length() - 1);
-    if (oriLetter != 'H' && oriLetter != 'V') {
-      throw new IllegalArgumentException("Invalid orientation letter" + oriLetter);
+    if (!version2 && oriLetter != 'H' && oriLetter != 'V') {
+      throw new IllegalArgumentException("Invalid version 1 orientation letter " + oriLetter);
+    }
+    if (version2 && oriLetter != 'U' && oriLetter != 'R' && oriLetter != 'D' && oriLetter != 'L') {
+      throw new IllegalArgumentException("Invalid version 2 orientation letter " + oriLetter);
     }
     this.where = w;
     this.orientation = oriLetter;

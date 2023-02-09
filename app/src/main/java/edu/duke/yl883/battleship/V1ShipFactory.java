@@ -22,7 +22,7 @@ public class V1ShipFactory implements AbstractShipFactory<Character> {
     } else if (ori != 'V') {
       throw new IllegalArgumentException("Invalid orientation letter " + ori);
     }
-    Ship<Character> s = new RectangleShip<Character>(name, where.getWhere(), w, h, letter, '*');
+    Ship<Character> s = new RectangleShip<Character>(ori, name, where.getWhere(), w, h, letter, '*');
     return s;
   }
 

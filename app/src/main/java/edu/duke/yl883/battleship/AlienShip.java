@@ -1,5 +1,6 @@
 package edu.duke.yl883.battleship;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 /** Ships in alien shape, could return
@@ -15,9 +16,9 @@ public class AlienShip<T> extends BasicShip<T>{
    * the right coordinate set and pass
    * them up to the BasicShip constructor
    *
+   * @param orientation is orientation of the ship
    * @param whereVacant is the HashSet of vacant
    *        pieces in the rectangular encloses
-   *        the ship
    * @param name is name of the ship
    * @param upperLeft is the coordinate of
    *                 upper left corner of the ship
@@ -26,8 +27,8 @@ public class AlienShip<T> extends BasicShip<T>{
    * @param myDisplayinfo is the display info to self
    * @param enemyDisplayinfo is the display info to enemy
    */
-  public AlienShip(HashSet<Coordinate> whereVacant, String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
-    super(makeCoords(whereVacant, upperLeft, width, height), myDisplayInfo, enemyDisplayInfo);
+  public AlienShip(char orientation, HashSet<Coordinate> whereVacant, String name, Coordinate upperLeft, int width, int height, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
+    super(orientation, upperLeft, makeCoords(whereVacant, upperLeft, width, height), myDisplayInfo, enemyDisplayInfo);
     this.name = name;
   }
   /**
@@ -37,10 +38,20 @@ public class AlienShip<T> extends BasicShip<T>{
    * @param data is info for myData
    * @param onHit is info for hit
    */
-  public AlienShip(HashSet<Coordinate> whereVacant, String name, Coordinate upperLeft, int width, int height, T data, T onHit) {
-    this(whereVacant, name, upperLeft, width, height, new SimpleShipDisplayInfo<T>(data, onHit), new SimpleShipDisplayInfo<T>(null, data));
+  public AlienShip(char orientation, HashSet<Coordinate> whereVacant, String name, Coordinate upperLeft, int width, int height, T data, T onHit) {
+    this(orientation, whereVacant, name, upperLeft, width, height, new SimpleShipDisplayInfo<T>(data, onHit), new SimpleShipDisplayInfo<T>(null, data));
   }
 
+  /**
+   * (Create ship with all pieces in the ship)
+   * 
+   * @param where is are pieces on this ship
+   * with all hit information
+   */
+  public AlienShip(char orientation, HashMap<Coordinate, Boolean> where, String name, Coordinate upperLeft, T data, T onHit) {
+    super(orientation, upperLeft, where, new SimpleShipDisplayInfo<T>(data, onHit), new SimpleShipDisplayInfo<T>(null, data));
+    this.name = name;
+  }
   /**
    * {@inheritDoc}
    */

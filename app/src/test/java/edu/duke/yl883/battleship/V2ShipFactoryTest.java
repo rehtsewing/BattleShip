@@ -39,6 +39,9 @@ public class V2ShipFactoryTest {
   @Test
   public void test_make_battleship() {
     V2ShipFactory f = new V2ShipFactory();
+    Placement u1_2 = new Placement(new Coordinate(1, 2), 'U');
+    Ship<Character> s0 = f.makeBattleship(u1_2);
+    checkShip(s0, "Battleship", 'b', new Coordinate(1, 3), new Coordinate(2, 2), new Coordinate(2, 4), new Coordinate(2, 3));
     Placement r1_2 = new Placement(new Coordinate(1, 2), 'R');
     Ship<Character> dst = f.makeBattleship(r1_2);
     checkShip(dst, "Battleship", 'b', new Coordinate(1, 2), new Coordinate(2, 2), new Coordinate(3, 2), new Coordinate(2, 3));
@@ -49,13 +52,4 @@ public class V2ShipFactoryTest {
     Ship<Character> s3 = f.makeBattleship(l2_2);
     checkShip(s3, "Battleship", 'b', new Coordinate(2, 3), new Coordinate(3, 3), new Coordinate(4, 3), new Coordinate(3, 2));
   }
-
-  @Test
-  public void test_make_invalid_ship() {
-    V1ShipFactory f = new V1ShipFactory();
-    assertThrows(IllegalArgumentException.class, ()->f.makeDestroyer(new Placement(new Coordinate(1, 2), 'Q')));
-    V2ShipFactory f2 = new V2ShipFactory();
-    assertThrows(IllegalArgumentException.class, ()->f2.makeBattleship(new Placement(new Coordinate(1, 2), 'A')));
-  }         
-
 }

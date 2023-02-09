@@ -90,6 +90,17 @@ public class BattleShipBoardTest {
     assertEquals(true, s1.isSunk());
   }
   @Test
+  public void test_takeout_ship() {
+    int wid = 5;
+    int col = 6;
+    V2ShipFactory f = new V2ShipFactory();
+    Ship<Character> s1 = f.makeDestroyer(new Placement(new Coordinate(3, 0), 'V'));
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
+    b1.tryAddShip(s1); //return a string if add ship failed
+    assertSame(s1, b1.takeoutShip(new Coordinate(3, 0)));
+    assertEquals(null, b1.takeoutShip(new Coordinate(4, 0)));
+  }
+  @Test
   public void test_what_at_enemy_board() {
     int wid = 5;
     int col = 6;
@@ -115,4 +126,5 @@ public class BattleShipBoardTest {
     b1.fireAt(new Coordinate(5, 0));
     assertEquals(true, b1.loseCheck());
   }
+
 }
