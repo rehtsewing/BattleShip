@@ -194,4 +194,38 @@ public class BattleShipBoard<T> implements Board<T> {
     }
     return true;
   }
+  /**
+   * Scan coordinate around the selected 
+   * point within range of 3 and return
+   * the scan information through HashMap
+   * @param c is the selected coordinate
+   * @return HashMap for scan result
+   */
+  public HashMap<T, Integer> scan(Coordinate c) {
+    int x = c.getColumn();
+    int y = c.getRow();
+    int range = 3;
+    HashMap<T,Integer> res = new HashMap<>();
+    for(int j = y - range; j <= y + range; j++) {
+      int diff = y - j;
+      if(y < j) diff = j - y;
+      for(int i = x - (range - diff); i <= x + (range - diff); i++) {
+        checkCoordinate(i, j, res);
+      }
+    }
+    return res;
+  }
+  /**
+   * Find the value at coordinate(x, y) if it is a
+   * valid coordinate and store it to the map
+   * @param x, y are for the coordinate
+   * @param res is the map to collect scan result
+   */
+  protected void checkCoordinate(int x, int y, HashMap<T, Integer>res) {
+    if(x >=0 && x < width && y >= 0 && y < height) {
+      T sign = whatIsAt(new Coordinate(x, y), true);
+      int num = res.getOrDefault(sign, 0);
+      res.put(sign, num + 1);
+    }
+  }
 }

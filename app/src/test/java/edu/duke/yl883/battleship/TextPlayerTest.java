@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Disabled;
@@ -242,40 +244,87 @@ public class TextPlayerTest {
     }
 
   @Test
-  public void test_rotate_to_default() {
-    int wid = 5;
-    int col = 6;
+  void test_conduct_scan() throws IOException {
+
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    BufferedReader input = new BufferedReader(new StringReader("S\nD3\n"));
+    PrintStream output = new PrintStream(bytes, true);
+    Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');
+    V2ShipFactory shipFactory = new V2ShipFactory();
+    
+    TextPlayer player = new TextPlayer("A", board, input, output, shipFactory, board);
+    board.tryAddShip(shipFactory.makeSubmarine(new Placement(new Coordinate(0, 2), 'V')));
+    player.playOneTurn();
+    
+    Board<Character> b1 = new BattleShipBoard<>(10, 20, 'X');
     V2ShipFactory f = new V2ShipFactory();
-    Ship<Character> s1 = f.makeDestroyer(new Placement(new Coordinate(3, 0), 'H'));
-    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
-    b1.tryAddShip(s1); //return a string if add ship failed
-    b1.rotateToDefault(s1);
-    assertEquals('d', b1.whatIsAt(new Coordinate(4, 0), false));
-  }
+
+    b1.tryAddShip(shipFactory.makeSubmarine(new Placement(new Coordinate(0, 2), 'V')));
+    BoardTextView expectedView = new BoardTextView(b1);
+    StringBuilder res = new StringBuilder();
+    res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
+    String prompt1 =
+      "Possible actions for Player A:\n\n" + " F Fire at a square\n" +
+      " M Move a ship to another square (2 remaining)\n" +
+      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n";
+
+    String prompt2 = "Player A where do you want to do sonar scan?\n" +
+      "Submarines occupy 1 squares\n" +
+      "Destroyers occupy 0 squares\n" +
+      "Battleships occupy 0 squares\n" +
+      "Carriers occupy 0 squares\n\n";
+    res.append(prompt1 + prompt2);
+    assertEquals(res.toString(), bytes.toString());
+    }
 
   @Test
   public void test_ship_after_move() {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10, 20, "", bytes);
     int wid = 9;
     int col = 20;
     V2ShipFactory f = new V2ShipFactory();
-    Ship<Character> s1 = f.makeCarrier(new Placement(new Coordinate(3, 0), 'U'));
+    Ship<Character> s1 = f.makeSubmarine(new Placement(new Coordinate(3, 0), 'V'));
     BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
-    b1.tryAddShip(s1); //return a string if add ship failed
-    s1 = b1.takeoutShip(new Coordinate(3, 0));
-    for(Coordinate c: s1.getCoordinates()) System.out.println(c.getRow() + "," + c.getColumn());
-    Ship<Character> mid = shipAfterMove(s1, new Coordinate(0, 0), 'U', false);
-    System.out.println("\n\n");
-    for(Coordinate c: s1.getCoordinates()) System.out.println(c.getRow() + "," + c.getColumn());
-    // b1.tryAddShip(s1); //return a string if add ship failed
-    // assertEquals('d', b1.whatIsAt(new Coordinate(0, 0), false));
-    // assertEquals(' ', b1.whatIsAt(new Coordinate(4, 0), false));
-    // assertEquals('d', b1.whatIsAt(new Coordinate(1, 4), false));
+    Ship<Character> res = player.shipAfterMove(s1, new Coordinate(0, 0), 'V');
+    Ship<Character> res1 = player.shipAfterMove(s1, new Coordinate(2, 2), 'H');
+    Ship<Character> res3 = player.shipAfterMove(s1, new Coordinate(2, 1), 'V');
+    
+    HashSet<Coordinate> expect0 = new HashSet<>();
+    expect0.add(new Coordinate(2, 2));
+    expect0.add(new Coordinate(2, 3));
+    HashSet<Coordinate> expect = new HashSet<>();
+    expect.add(new Coordinate(2, 1));
+    expect.add(new Coordinate(3, 1));
+    assertEquals(expect0, res1.getCoordinates());
+    assertEquals(expect, res3.getCoordinates());
+    assertEquals(true, res.occupiesCoordinates(new Coordinate(0,0)));
+  }
+  @Test
+  public void test_default_ori_ship() {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10, 20, "", bytes);
+    int wid = 9;
+    int col = 20;
+    V2ShipFactory f = new V2ShipFactory();
+    Ship<Character> s1 = f.makeBattleship(new Placement(new Coordinate(3, 0), 'L'));
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
+    s1.recordHitAt(new Coordinate(4, 0));
+    Ship<Character> res = player.defaultOriShip(s1);
+    
+    HashSet<Coordinate> expect0 = new HashSet<>();
+    expect0.add(new Coordinate(4, 0));
+    expect0.add(new Coordinate(3, 1));
+    expect0.add(new Coordinate(4, 1));
+    expect0.add(new Coordinate(4, 2));
+    assertEquals(expect0, res.getCoordinates());
+    assertEquals(true, res.wasHitAt(new Coordinate(3, 1)));
   }
   @Test
   void test_conduct_move() throws IOException {
 
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    BufferedReader input = new BufferedReader(new StringReader("M\nB2\nC0V\nA8V\nB2V\nF\nC2\n"));
+    BufferedReader input = new BufferedReader(new StringReader("M\nB2\nI0H\nF\nC2\n"));
     PrintStream output = new PrintStream(bytes, true);
     Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');
     V2ShipFactory shipFactory = new V2ShipFactory();
@@ -297,12 +346,13 @@ public class TextPlayerTest {
       " M Move a ship to another square (2 remaining)\n" +
       " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n";
 
-    String prompt2 = "Player A which ship would you like to choose?\n" + "Player A where do you want to place this submarine\n\n";
+    String prompt2 = "Player A which ship would you like to choose?\n" + "Player A where do you want to place this Submarine?\n\n";
     res.append(prompt1 + prompt2);
     Ship<Character> s = b1.takeoutShip(place);
     Coordinate destination = new Coordinate(8, 0);
-    b1.rotateToDefault(s);
-    b1.updatePlace(s, destination, 'V', false);
+    Ship<Character> mid = player.defaultOriShip(s);
+    Ship<Character> mid1 = player.shipAfterMove(s, destination, 'H');
+    b1.tryAddShip(mid1);
 
     String prompt3 = "Player A where do you want to fire at?\n" + "You missed!\n\n";
     res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");

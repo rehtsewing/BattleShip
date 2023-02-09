@@ -50,10 +50,10 @@ public class V2ShipFactory implements AbstractShipFactory<Character>  {
     } else if(ori == 'D') {
       row += h - c.getRow();
       col += w - c.getColumn();
-    } else if(ori == 'L') {
+    } else if(ori == 'L' || ori == 'H') {
       row += w - c.getColumn();
       col += c.getRow();
-    } else if(ori == 'U') {
+    } else if(ori == 'U' || ori == 'V') {
       row += c.getRow();
       col += c.getColumn();
     }

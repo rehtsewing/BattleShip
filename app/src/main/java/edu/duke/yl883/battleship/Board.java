@@ -1,5 +1,7 @@
 package edu.duke.yl883.battleship;
 
+import java.util.HashMap;
+
 /**
  * Interface Board<T> with a generic type T
  * @method getWidht()
@@ -14,6 +16,6 @@ public interface Board<T> {
   public Ship<T> fireAt(Coordinate c);
   public Ship<T> takeoutShip(Coordinate c);
   public boolean loseCheck();
-
+  public HashMap<T, Integer> scan(Coordinate c);
 
 }

@@ -95,8 +95,11 @@ public class BattleShipBoardTest {
     int col = 6;
     V2ShipFactory f = new V2ShipFactory();
     Ship<Character> s1 = f.makeDestroyer(new Placement(new Coordinate(3, 0), 'V'));
+    Ship<Character> s2 = f.makeDestroyer(new Placement(new Coordinate(3, 1), 'V'));
     BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
     b1.tryAddShip(s1); //return a string if add ship failed
+    b1.tryAddShip(s2);
+    assertSame(s2, b1.takeoutShip(new Coordinate(4, 1)));
     assertSame(s1, b1.takeoutShip(new Coordinate(3, 0)));
     assertEquals(null, b1.takeoutShip(new Coordinate(4, 0)));
   }

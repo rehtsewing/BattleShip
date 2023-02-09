@@ -206,7 +206,7 @@ public class TextPlayer {
     String s = inputReader.readLine();
     if(s.equals("F")) conductFire();
     else if(s.equals("M")) conductMove();
-    //else if(s.equals("S")) conductScan();
+    else if(s.equals("S")) conductScan();
     else throw new IllegalArgumentException("Invalid action number " + s);
   }
   /**
@@ -220,6 +220,30 @@ public class TextPlayer {
     } else {
       out.println("You missed!\n");
     }
+  }
+  /**
+   * Conduct sonar scan action
+   */
+  public void conductScan() throws IOException{
+    Coordinate c = readCoordinate("Player " + name + " where do you want to do sonar scan?");
+    HashMap<Character, Integer> scanRes = enemyBoard.scan(c);
+    StringBuilder s = new StringBuilder();
+    s.append("Submarines occupy " + getScanRes('s', scanRes) + " squares\n");
+    s.append("Destroyers occupy " + getScanRes('d', scanRes) + " squares\n");
+    s.append("Battleships occupy " + getScanRes('b', scanRes) + " squares\n");
+    s.append("Carriers occupy " + getScanRes('c', scanRes) + " squares\n");
+    out.println(s.toString());
+  }
+  /**
+   * Return times of sign if exists
+   * otherwise 0
+   * @param sign is the tag of the ship to search
+   * @param scanRes is the HashMap for scan result
+   * @return times appear
+   */
+  protected Integer getScanRes(char sign, HashMap<Character, Integer> scanRes) {
+    if(scanRes.get(sign) == null) return 0;
+    else return scanRes.get(sign);
   }
     /**
    * Conduct move ship action
@@ -241,8 +265,8 @@ public class TextPlayer {
    */
     private void moveTo(Ship<Character> s) throws IOException {
       Ship<Character> mid = defaultOriShip(s);
-      Placement p = readPlacement("Player " + name + " where do you want to place this " + s.getName() + "?", shipCreationVersion.get(s.getName()));
-      Ship<Character> res = shipAfterMove(mid, p.getWhere(), p.getOrientation(), false);
+      Placement p = readPlacement("Player " + name + " where do you want to place this " + s.getName() + "?\n", shipCreationVersion.get(s.getName()));
+      Ship<Character> res = shipAfterMove(mid, p.getWhere(), p.getOrientation());
       String message = theBoard.tryAddShip(res);
       if(message != null) {
         out.println(message);
@@ -260,9 +284,9 @@ public class TextPlayer {
   public Ship<Character> defaultOriShip(Ship<Character> s) {
     char ori = s.getOrientation();
     Coordinate origin = new Coordinate(0, 0);
-    if(ori == 'R') return shipAfterMove(s, s.getTopLeft(), 'L', true);
-    if(s.getOrientation() == 'D') return shipAfterMove(s, s.getTopLeft(), 'D', false);
-    if(s.getOrientation() == 'L' || ori == 'H') return shipAfterMove(s, s.getTopLeft(), 'R', true);
+    if(ori == 'R') return shipAfterMove(s, s.getTopLeft(), 'L');
+    if(s.getOrientation() == 'D') return shipAfterMove(s, s.getTopLeft(), 'D');
+    if(s.getOrientation() == 'L' || ori == 'H') return shipAfterMove(s, s.getTopLeft(), 'R');
     return s;
   }
   /**
@@ -272,26 +296,21 @@ public class TextPlayer {
    * @param newCoordinate is the new top left corner
    * @param ori is the relative orientation between
    * the new and old orientation
-   * @param exchange is a bool to determine exchange
-   * width and length or not
    */    
-  public Ship<Character> shipAfterMove(Ship<Character> s, Coordinate newCoordinate, char ori, boolean exchange) {
+  public Ship<Character> shipAfterMove(Ship<Character> s, Coordinate newCoordinate, char ori) {
     Coordinate topLeft = s.getTopLeft();
-    int rowChange = newCoordinate.getRow() - topLeft.getRow();
-    int colChange = newCoordinate.getColumn() - topLeft.getColumn();
     V2ShipFactory f = new V2ShipFactory();
-    int width = s.getDiagonal().getColumn() - s.getTopLeft().getColumn();
-    int length = s.getDiagonal().getRow() - s.getTopLeft().getRow();
-    if(exchange) {
-      int temp = width;
-      width = length;
-      length = temp;
-    }
+    int width = s.getDiagonal().getColumn() - topLeft.getColumn();
+    int length = s.getDiagonal().getRow() - topLeft.getRow();
+    char sign = ' ';
     HashMap<Coordinate, Boolean> newCoords = new HashMap<>();
     for(Coordinate c : s.getCoordinates()) {
-      newCoords.put(f.applyOrientation(new Coordinate(rowChange, colChange), ori, c, width, length), s.wasHitAt(c));
+      if(!s.wasHitAt(c)) sign = s.getDisplayInfoAt(c, true);
+      Coordinate modify = new Coordinate(c.getRow() - topLeft.getRow(), c.getColumn() - topLeft.getColumn());
+      //      System.out.println(modify.getColumn() + "," + modify.getRow() + "," + width + "," + length);
+      newCoords.put(f.applyOrientation(newCoordinate, ori, modify, width, length), s.wasHitAt(c));
     }
-    Ship<Character> newShip = new AlienShip<Character>(ori, newCoords, s.getName(), newCoordinate, s.getDisplayInfoAt(topLeft, exchange), '*');
+    Ship<Character> newShip = new AlienShip<Character>(ori, newCoords, s.getName(), newCoordinate, sign, '*');
     return newShip;
   }
   /**
