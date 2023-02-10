@@ -5,11 +5,22 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.function.Function;
 
+/** Computer player pattern in text mode*/
 public class TextComputer extends AbstractTextUser{
     /** Computer logic used if this player 
    * is computer*/
   final ComputerLogic cl;
   
+  /**
+   * Construct the textcomputer with specfied name, board,
+   * BufferedReader, PrintStream, factory and enemyboard
+   * @param name is name of the player
+   * @param theBoard    is board used for current player
+   * @param input is the input reader for current player
+   * @param out         is the out stream for current player
+   * @param f is version 2 ship factory of current player
+   * @param enemyBoard is the board of enemy 
+   */
   public TextComputer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V2ShipFactory f, Board<Character> enemyBoard) {
     super(name, theBoard, input, out, f, enemyBoard);
     this.cl = new ComputerLogic();

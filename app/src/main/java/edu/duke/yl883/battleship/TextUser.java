@@ -3,7 +3,7 @@ package edu.duke.yl883.battleship;
 import java.io.IOException;
 import java.util.function.Function;
 
-/** This interface represents Player pattern
+/** This interface represents game User pattern
  *  in text mode */
 public interface TextUser {
   /** set the enemyBoard

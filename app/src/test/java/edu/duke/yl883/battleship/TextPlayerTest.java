@@ -120,7 +120,7 @@ public class TextPlayerTest {
     String prompt1 =
       "Possible actions for Player A:\n\n" + " F Fire at a square\n" +
       " M Move a ship to another square (2 remaining)\n" +
-      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n";
+      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n";
     String prompt2 = "Player A where do you want to fire at?\n";
     promptAll = start + expectView.displayMyBoardWithEnemyNextToIt(expectView, "Your Ocean", "Enemy's Ocean") + "\n" + prompt1 + prompt2 + promptAll + prompt2;
 
@@ -234,6 +234,38 @@ public class TextPlayerTest {
   }
 
   @Test
+  void test_play_one_turn_errorhandle() throws IOException {
+
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    BufferedReader input = new BufferedReader(new StringReader("p\nF\nB2\n"));
+    PrintStream output = new PrintStream(bytes, true);
+    Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');
+    V2ShipFactory shipFactory = new V2ShipFactory();
+    
+    TextPlayer player = new TextPlayer("A", board, input, output, shipFactory, board);
+    board.tryAddShip(shipFactory.makeSubmarine(new Placement(new Coordinate(0, 2), 'V')));
+    player.playOneTurn();
+
+    Board<Character> b1 = new BattleShipBoard<>(10, 20, 'X');
+    V2ShipFactory f = new V2ShipFactory();
+
+    b1.tryAddShip(f.makeSubmarine(new Placement(new Coordinate(0, 2), 'V')));
+    BoardTextView expectedView = new BoardTextView(b1);
+    StringBuilder res = new StringBuilder();
+    res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
+    String prompt1 =
+      "Possible actions for Player A:\n\n" + " F Fire at a square\n" +
+      " M Move a ship to another square (2 remaining)\n" +
+      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n";
+    String prompt =
+      "That action is invalid: it does not have the correct format.\n" +
+      "Player A, what would you like to do?\n" +
+      "Player A where do you want to fire at?\n" +
+      "You hit a Submarine!\n\n";
+    assertEquals(res.toString() + prompt1 + prompt, bytes.toString());
+  }
+
+  @Test
   void test_play_one_turn() throws IOException {
 
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -257,7 +289,7 @@ public class TextPlayerTest {
     String prompt1 =
       "Possible actions for Player A:\n\n" + " F Fire at a square\n" +
       " M Move a ship to another square (2 remaining)\n" +
-      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n";
+      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n";
 
     String prompt2 = "Player A where do you want to fire at?\n" + "You hit a Submarine!\n\n";
     res.append(prompt1 + prompt2);
@@ -290,7 +322,7 @@ public class TextPlayerTest {
     b1.tryAddShip(shipFactory.makeSubmarine(new Placement(new Coordinate(1, 2), 'V')));
     BoardTextView expectedView = new BoardTextView(b1);
     StringBuilder res = new StringBuilder();
-    String prompt1 = "Player A, what would you like to do?\n\n";
+    String prompt1 = "Player A, what would you like to do?\n";
 
     String prompt2 = "Player A where do you want to fire at?\n" + "You hit a Submarine!\n\n";
     res.append(prompt1 + prompt2);
@@ -301,7 +333,7 @@ public class TextPlayerTest {
       "Destroyers occupy 0 squares\n" +
       "Battleships occupy 0 squares\n" +
       "Carriers occupy 0 squares\n\n";
-    String prompt4 = "Player A which ship would you like to choose?\n" + "Player A where do you want to place this Submarine?\n\n";
+    String prompt4 = "Player A which ship would you like to choose?\n" + "Player A where do you want to place this Submarine?\n";
     res.append(prompt1+prompt3+prompt1+prompt4);
     assertEquals(res.toString(), bytes.toString());
     }
@@ -329,7 +361,7 @@ public class TextPlayerTest {
     String prompt1 =
       "Possible actions for Player A:\n\n" + " F Fire at a square\n" +
       " M Move a ship to another square (2 remaining)\n" +
-      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n";
+      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n";
 
     String prompt2 = "Player A where do you want to do sonar scan?\n" +
       "Submarines occupy 1 squares\n" +
@@ -367,27 +399,39 @@ public class TextPlayerTest {
   public void test_default_ori_ship() {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     TextPlayer player = createTextPlayer(10, 20, "", bytes);
-    int wid = 9;
-    int col = 20;
-    V2ShipFactory f = new V2ShipFactory();
-    Ship<Character> s1 = f.makeBattleship(new Placement(new Coordinate(3, 0), 'L'));
-    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
-    s1.recordHitAt(new Coordinate(4, 0));
-    Ship<Character> res = player.defaultOriShip(s1);
-    
+  
     HashSet<Coordinate> expect0 = new HashSet<>();
     expect0.add(new Coordinate(4, 0));
     expect0.add(new Coordinate(3, 1));
     expect0.add(new Coordinate(4, 1));
     expect0.add(new Coordinate(4, 2));
-    assertEquals(expect0, res.getCoordinates());
-    assertEquals(true, res.wasHitAt(new Coordinate(3, 1)));
+    
+    HashSet<Coordinate> expect1 = new HashSet<>();
+    expect1.add(new Coordinate(4, 1));
+    expect1.add(new Coordinate(4, 2));
+    expect1.add(new Coordinate(4, 3));
+    expect1.add(new Coordinate(3, 2));
+    
+    HashSet<Coordinate> expect2 = new HashSet<>();
+    expect2.add(new Coordinate(4, 2));
+    expect2.add(new Coordinate(4, 3));
+    expect2.add(new Coordinate(4, 4));
+    expect2.add(new Coordinate(3, 3));
+    default_ori_helper(expect0, new Coordinate(3, 0), 'L', player);
+    default_ori_helper(expect1, new Coordinate(3, 1), 'R', player);
+    default_ori_helper(expect2, new Coordinate(3, 2), 'D', player);
   }
-  @Test
+  private void default_ori_helper(HashSet<Coordinate> expect, Coordinate topLeft, char ori, TextPlayer player) {
+    V2ShipFactory f = new V2ShipFactory();
+    Ship<Character> s = f.makeBattleship(new Placement(topLeft, ori));
+    Ship<Character> res = player.defaultOriShip(s);
+    assertEquals(expect, res.getCoordinates());
+  }
+    @Test
   void test_conduct_move() throws IOException {
 
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    BufferedReader input = new BufferedReader(new StringReader("M\nB2\nI0H\n"));
+    BufferedReader input = new BufferedReader(new StringReader("M\nD2\nB2\nI9H\nI0H\n"));
     PrintStream output = new PrintStream(bytes, true);
     Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');
     V2ShipFactory shipFactory = new V2ShipFactory();
@@ -406,10 +450,15 @@ public class TextPlayerTest {
     String prompt1 =
       "Possible actions for Player A:\n\n" + " F Fire at a square\n" +
       " M Move a ship to another square (2 remaining)\n" +
-      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n";
+      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n";
 
-    String prompt2 = "Player A which ship would you like to choose?\n" + "Player A where do you want to place this Submarine?\n\n";
-    res.append(prompt1 + prompt2);
+    String prompt2 = "Player A which ship would you like to choose?\n" +
+      "No ship at this coordinate!\n\n" +
+      "Player A which ship would you like to choose?\n";
+    String prompt3 = 
+      "Player A where do you want to place this Submarine?\n";
+    String errorMess = "That placement is invalid: the ship goes off the right of the board.\n";
+    res.append(prompt1 + prompt2 + prompt3 + errorMess + prompt3);
     Ship<Character> s = b1.takeoutShip(place);
     Coordinate destination = new Coordinate(8, 0);
     Ship<Character> mid = player.defaultOriShip(s);

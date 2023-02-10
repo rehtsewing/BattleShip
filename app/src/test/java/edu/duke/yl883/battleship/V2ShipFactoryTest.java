@@ -52,4 +52,18 @@ public class V2ShipFactoryTest {
     Ship<Character> s3 = f.makeBattleship(l2_2);
     checkShip(s3, "Battleship", 'b', new Coordinate(2, 3), new Coordinate(3, 3), new Coordinate(4, 3), new Coordinate(3, 2));
   }
+  @Test
+  public void test_apply_orientation() {
+    //'V'
+    Coordinate topLeft = new Coordinate(2, 0);
+    Coordinate c = new Coordinate(2, 2);
+    V2ShipFactory f = new V2ShipFactory();
+    Coordinate res = f.applyOrientation(topLeft, 'V', c, 2, 1);
+    assertEquals(new Coordinate(4, 2), res);
+    Coordinate res1 = f.applyOrientation(topLeft, 'U', c, 2, 1);
+    assertEquals(new Coordinate(4, 2), res1);
+    //invalid
+    Coordinate res2 = f.applyOrientation(topLeft, 'M', c, 2, 1);
+    assertEquals(new Coordinate(2, 0), res2);
+  }
 }

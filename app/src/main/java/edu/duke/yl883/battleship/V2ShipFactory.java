@@ -38,8 +38,6 @@ public class V2ShipFactory implements AbstractShipFactory<Character>  {
    * @param c  is the coordinate of current piece on the ship
    * @param w      is the width for up placed ship
    * @param h      is the height for up placed ship
-   * @throws IllegalArgumentException if orientation letter is not
-   *         R or D or L or U
    */
   public Coordinate applyOrientation(Coordinate topLeft, char ori, Coordinate c, int w, int h) {
     int row = topLeft.getRow();

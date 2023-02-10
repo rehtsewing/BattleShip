@@ -23,16 +23,14 @@ public class BattleShipBoard<T> implements Board<T> {
    * ArrayList of ships on the board
    */
   final ArrayList<Ship<T>> myShips;
-  /**
-   * ArrayList of ships has been moved by player
-   */
-  final ArrayList<Ship<T>> movedShips;
   /** PLacement rule check of the board*/
   private final PlacementRuleChecker<T> placementChecker;
   /** Record the where enemy has missed*/
   /** Points hidden to enemy*/
-  /** Hit point on the moved ship in the original place*/
-  protected HashSet<Coordinate> enemyMisses, hidePoints, movedHitPoints;
+  /** Hit point on the moved ship in the original place
+   * with their hit information*/
+  final HashSet<Coordinate> enemyMisses, hidePoints;
+  final HashMap<Coordinate, T> movedHitPoints;
   /** Sign for missed information*/
   final T missInfo;
   /**
@@ -60,8 +58,13 @@ public class BattleShipBoard<T> implements Board<T> {
     this.enemyMisses = new HashSet<Coordinate>();
     this.hidePoints = new HashSet<Coordinate>();
     this.missInfo = missInfo;
-    this.movedShips = new ArrayList<Ship<T>>();
+    this.movedHitPoints = new HashMap<Coordinate, T>();
   }
+  /** Construct battleshipboard with 
+   * @param w is width
+   * @param h is height
+   * @param missInfo is representation of missInfo
+   */
   public BattleShipBoard(int w, int h, T missInfo) {
     this(w, h, new InBoundsRuleChecker<T>(new NoCollisionRuleChecker<T>(null)), missInfo);
   }
@@ -100,8 +103,9 @@ public class BattleShipBoard<T> implements Board<T> {
   }
   
   /**
-   * Try to add the moved ship to myShips, which hidden
-   * to enemy, but might not succeed
+   * Try to add the ship after moved to myShips and
+   * all its hit points to hidePoints which hidden
+   * to enemy
    * @param toAdd is the ship try to be added to the list
    * @return null if successfully add the ship, error
    *          message otherwisex
@@ -150,11 +154,7 @@ public class BattleShipBoard<T> implements Board<T> {
    */
   protected T whatIsAt(Coordinate where, boolean isSelf) {
     if(!isSelf) {
-      for(Ship<T> s : movedShips) {
-        if(s.occupiesCoordinates(where)) {
-          return s.getDisplayInfoAt(where, isSelf); 
-        }
-      }
+      if(movedHitPoints.containsKey(where)) return movedHitPoints.get(where); 
       if(enemyMisses.contains(where)) return missInfo;
     }
     for (Ship<T> s: myShips) {
@@ -178,9 +178,11 @@ public class BattleShipBoard<T> implements Board<T> {
         s.recordHitAt(c);
         if(enemyMisses.contains(c)) enemyMisses.remove(c);
         if(hidePoints.contains(c)) hidePoints.remove(c);
+        if(movedHitPoints.containsKey(c)) movedHitPoints.remove(c); 
         return s;
       }
     }
+    if(movedHitPoints.containsKey(c)) movedHitPoints.remove(c);   
     enemyMisses.add(c);
     return null;
   }
@@ -194,11 +196,21 @@ public class BattleShipBoard<T> implements Board<T> {
     for(int i = 0; i < myShips.size(); i++) {
       Ship<T> s = myShips.get(i);
       if(s.occupiesCoordinates(c)) {
-        movedShips.add(s);
+        addMovedHitPoint(s);
         return myShips.remove(i);
       }
     }
     return null;
+  }
+  /**
+   * Add the original hit points in the
+   * moved ship to movedHitPoints
+   * @param s is the moved ship to check with
+   */
+  private void addMovedHitPoint(Ship<T> s) {
+    for(Coordinate c : s.getCoordinates()) {
+      movedHitPoints.put(c, s.getDisplayInfoAt(c, false));
+    }
   }
   /**
    * Check for lose info of the board
@@ -220,15 +232,15 @@ public class BattleShipBoard<T> implements Board<T> {
    * @return HashMap for scan result
    */
   public HashMap<T, Integer> scan(Coordinate c) {
-    int x = c.getColumn();
-    int y = c.getRow();
+    int x = c.getColumn(); //1
+    int y = c.getRow(); //6
     int range = 3;
     HashMap<T,Integer> res = new HashMap<>();
-    for(int j = y - range; j <= y + range; j++) {
-      int diff = y - j;
+    for(int j = y - range; j <= y + range; j++) { //3, 9
+      int diff = y - j;// 3
       if(y < j) diff = j - y;
       for(int i = x - (range - diff); i <= x + (range - diff); i++) {
-        checkCoordinate(i, j, res);
+        checkCoordinate(j, i, res);//1, 1
       }
     }
     return res;
@@ -240,8 +252,8 @@ public class BattleShipBoard<T> implements Board<T> {
    * @param res is the map to collect scan result
    */
   protected void checkCoordinate(int x, int y, HashMap<T, Integer>res) {
-    if(x >=0 && x < width && y >= 0 && y < height) {
-      T sign = whatIsAt(new Coordinate(x, y), true);
+    if(x >= 0 && x < height && y >= 0 && y < width) {
+      T sign = whatIsAtForSelf(new Coordinate(x, y));
       int num = res.getOrDefault(sign, 0);
       res.put(sign, num + 1);
     }

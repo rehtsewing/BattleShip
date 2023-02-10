@@ -18,7 +18,7 @@ public class App {
   /** confront pair in theis app*/
   protected ArrayList<TextUser> confrontPair;
   /**
-   * Construct the game app with specfied two players
+   * Construct the game app with specfied four players
    *
    * @param player1 is first player
    * @param player2 is second player
@@ -31,10 +31,17 @@ public class App {
     this.computer2 = computer2;
     this.confrontPair = new ArrayList<TextUser>();
   }
+  /**
+   * Conduct the two human player mode*/
   public void addHuman() {
     confrontPair.add(player1);
     confrontPair.add(player2);
   }
+  /**
+   * Do the player selection
+   * choose between two human players
+   * and two computer players
+   */
   public void doPlayerSelection() throws IOException{
     if(player1.doPlayerSelection()) confrontPair.add(player1);
     if(player2.doPlayerSelection()) confrontPair.add(player2);
@@ -44,7 +51,7 @@ public class App {
     confrontPair.get(1).setEnemyBoard(confrontPair.get(0).getOwnBoard());
   }
   /** 
-   * Handle player1 and player 2 to
+   * Handle user1 and user2 to
    * start placement phase 
    */
   public void doPlacementPhase() throws IOException{
@@ -52,7 +59,7 @@ public class App {
     confrontPair.get(1).doPlacementPhase();
   }
   /** 
-   * Handle player1 and player 2 to
+   * Handle user1 and user2 to
    * do attack until the game end
    */
   public void doAttackingPhase() throws IOException{

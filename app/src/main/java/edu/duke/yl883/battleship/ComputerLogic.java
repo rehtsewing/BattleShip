@@ -11,8 +11,8 @@ public class ComputerLogic {
   int deployNum, playNum;
   /**
    * Construct a computer logic by initiate 
-   * the deploy logic string and play logic 
-   * string
+   * the deploy logic string List and play 
+   * logic string list
    */
   public ComputerLogic() {
     this.deployLogic = new ArrayList<String>();
@@ -23,8 +23,8 @@ public class ComputerLogic {
     makePLayLogic();
   }
   /**
-   * Get the logic of this computer
-   * @return all logic string
+   * Get the action logic of this computer
+   * @return string of next fire at coordinate
    */
   public String nextAction() {
     String s = playLogic.get(playNum);
@@ -32,8 +32,8 @@ public class ComputerLogic {
     return s;
   }
   /**
-   * Get the logic of this computer
-   * @return all logic string
+   * Get the next deploy logic of this computer
+   * @return string of next placement
    */
   public String nextDeploy() {
     String s = deployLogic.get(deployNum);
@@ -42,7 +42,6 @@ public class ComputerLogic {
   }
   /**
    * Make the deploy input logic string
-   * @return deploy logic string
    */
   private void makeDeployLogic() {
     deployLogic.add("A0V");
@@ -58,7 +57,6 @@ public class ComputerLogic {
   }
   /**
    * Make the play input logic string
-   * @return play logic string
    */
   private void makePLayLogic() {
     for(int i = 0; i < 20; i++) {

@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Function;
 
-/** Player pattern in text mode */
+/** Abstract user pattern in text mode */
 public abstract class AbstractTextUser implements TextUser{
   /**
    * theBoard is the my own Board for the App
@@ -20,6 +20,7 @@ public abstract class AbstractTextUser implements TextUser{
    * inputReader is a bufferedReader of the App
    * out is the stream to be printed to
    * shipFactory is object to make ship
+   * name is name of the text user
    */
   final Board<Character> theBoard;
   protected Board<Character> enemyBoard;
@@ -47,14 +48,14 @@ public abstract class AbstractTextUser implements TextUser{
   final boolean selected;
 
   /**
-   * Construct the textplayer with specfied name, board,
-   * BufferedReader, PrintStream and factory
+   * Construct the abstract textuser with specfied name, board,
+   * BufferedReader, PrintStream, factory and enemy board
    * @param name is name of the player
    * @param theBoard    is board used for current player
    * @param input is the input reader for current player
    * @param out         is the out stream for current player
-   * @param f is version 1 ship factory of current player
-   * @param isComputer indicate whether this player is computer 
+   * @param f is version 2 ship factory of current player
+   * @param enemyBoard is the board of enemy 
    */
   public AbstractTextUser(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V2ShipFactory f, Board<Character> enemyBoard) {
     this.name = name;

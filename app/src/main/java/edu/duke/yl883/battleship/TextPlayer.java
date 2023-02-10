@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -15,13 +12,13 @@ public class TextPlayer extends AbstractTextUser{
   
   /**
    * Construct the textplayer with specfied name, board,
-   * BufferedReader, PrintStream and factory
+   * BufferedReader, PrintStream, factory and enemy board
    * @param name is name of the player
    * @param theBoard    is board used for current player
    * @param input is the input reader for current player
    * @param out         is the out stream for current player
-   * @param f is version 1 ship factory of current player
-   * @param isComputer indicate whether this player is computer 
+   * @param f is version 2 ship factory of current player
+   * @param enemyBoard is the board of enemy 
    */
   public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V2ShipFactory f, Board<Character> enemyBoard) {
     super(name, theBoard, input, out, f, enemyBoard);
@@ -52,14 +49,7 @@ public class TextPlayer extends AbstractTextUser{
     return new Placement(s, version2);
   }
   /**
-   * Read a Placement 
-   * Create a ship based on the Placement
-   * Add that ship to the board, redo this process
-   * if previous adding failed
-   * Print out the board (to out, not to System.out)
-   * @param shipName is type string of the ship
-   * @param createFn is an apply method that takes
-   * a Placement and return a ship
+   * {@inheritDoc}
    */
   @Override
   public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
@@ -75,10 +65,7 @@ public class TextPlayer extends AbstractTextUser{
   }
 
   /**
-   * (a) Display the starting (empty) board
-   * (b) Print the instructions message (from the README,
-   *     but also shown again near the top of this file)
-   * (c) Recursively Call doOnePlacement to place all ships
+   * {@inheritDoc}
    */
   @Override
   public void doPlacementPhase() throws IOException {
@@ -104,9 +91,8 @@ public class TextPlayer extends AbstractTextUser{
  
   /**
    * Display board relevant information
-   * Read a Coordinate
-   * Get a ship by firing at the coordinate
-   * Print relevant info according to the gotten ship
+   * Read an action
+   * Implement that action
    */
   @Override
   public void playOneTurn() throws IOException {
@@ -130,7 +116,7 @@ public class TextPlayer extends AbstractTextUser{
    */
   @Override
   public void doOneAction() throws IOException{
-    out.println("Player " + name + ", what would you like to do?\n");
+    out.println("Player " + name + ", what would you like to do?");
     String s = inputReader.readLine();
     if(s.equals("F")) conductFire();
     else if(s.equals("M") && moveShipNum > 0) {
@@ -143,7 +129,7 @@ public class TextPlayer extends AbstractTextUser{
     else throw new IllegalArgumentException("Invalid action number " + s);
   }
   /**
-   * Conduct fireat action
+   * Conduct fire at action
    */
   @Override
   public void conductFire() throws IOException{
@@ -169,7 +155,7 @@ public class TextPlayer extends AbstractTextUser{
     out.println(s.toString());
   }
   /**
-   * Return times of sign if exists
+   * Return appearing times of sign if exists
    * otherwise 0
    * @param sign is the tag of the ship to search
    * @param scanRes is the HashMap for scan result
@@ -199,7 +185,7 @@ public class TextPlayer extends AbstractTextUser{
    */
     private void moveTo(Ship<Character> s) throws IOException {
       Ship<Character> mid = defaultOriShip(s);
-      Placement p = readPlacement("Player " + name + " where do you want to place this " + s.getName() + "?\n", shipCreationVersion.get(s.getName()));
+      Placement p = readPlacement("Player " + name + " where do you want to place this " + s.getName() + "?", shipCreationVersion.get(s.getName()));
       Ship<Character> res = shipAfterMove(mid, p.getWhere(), p.getOrientation());
       String message = theBoard.tryAddHideShip(res);
       if(message != null) {
@@ -214,6 +200,7 @@ public class TextPlayer extends AbstractTextUser{
    * on the ship to default: 'V' for version1
    * 'U' for version2
    * @param s is the ship to be handled
+   * @return the newly created rotated ship
    */    
   public Ship<Character> defaultOriShip(Ship<Character> s) {
     char ori = s.getOrientation();
@@ -230,6 +217,7 @@ public class TextPlayer extends AbstractTextUser{
    * @param newCoordinate is the new top left corner
    * @param ori is the relative orientation between
    * the new and old orientation
+   * @return the newly created ship after the movement
    */    
   public Ship<Character> shipAfterMove(Ship<Character> s, Coordinate newCoordinate, char ori) {
     Coordinate topLeft = s.getTopLeft();
@@ -241,7 +229,6 @@ public class TextPlayer extends AbstractTextUser{
     for(Coordinate c : s.getCoordinates()) {
       if(!s.wasHitAt(c)) sign = s.getDisplayInfoAt(c, true);
       Coordinate modify = new Coordinate(c.getRow() - topLeft.getRow(), c.getColumn() - topLeft.getColumn());
-      //      System.out.println(modify.getColumn() + "," + modify.getRow() + "," + width + "," + length);
       newCoords.put(f.applyOrientation(newCoordinate, ori, modify, width, length), s.wasHitAt(c));
     }
     Ship<Character> newShip = new AlienShip<Character>(ori, newCoords, s.getName(), newCoordinate, sign, '*');

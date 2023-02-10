@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
@@ -183,5 +184,22 @@ public class BattleShipBoardTest {
     b1.fireAt(new Coordinate(5, 0));
     assertEquals(true, b1.loseCheck());
   }
-
+  @Test
+  public void test_scan() {
+    int wid = 10;
+    int col = 20;
+    V2ShipFactory f = new V2ShipFactory();
+    Ship<Character> s1 = f.makeDestroyer(new Placement(new Coordinate(2, 0), 'V'));
+    Ship<Character> s2 = f.makeDestroyer(new Placement(new Coordinate(4, 1), 'H'));
+    Ship<Character> s3 = f.makeBattleship(new Placement(new Coordinate(6, 0), 'U'));
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
+    b1.tryAddShip(s1);
+    b1.tryAddShip(s2);
+    b1.tryAddShip(s3);
+    HashMap<Character, Integer> expect = new HashMap<>();
+    expect.put('d', 3);
+    expect.put('b', 4);
+    expect.put(null, 14);
+    assertEquals(expect, b1.scan(new Coordinate(6, 1)));
+  }
 }
