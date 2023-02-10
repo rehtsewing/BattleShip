@@ -51,6 +51,8 @@ class AppTest {
   void test_do_placement_phase() throws IOException{
     Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
     Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b3 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b4 = new BattleShipBoard<Character>(10, 20, 'X');
     BufferedReader input = new BufferedReader(new StringReader("A0V\nC0H\nA2V\nA3V\nF4V\nA5V\nE6V\nA7V\nA8V\nD9V\nA0V\nC0H\nA2V\nA3V\nF4V\nA5V\nE6V\nA7V\nA8V\nD9V\n"));
     V2ShipFactory factory = new V2ShipFactory();
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -59,8 +61,10 @@ class AppTest {
     PrintStream output1 = new PrintStream(bytes1, true);
     TextPlayer p1 = new TextPlayer("A", b1, input, output, factory, b2);
     TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory, b1);
+    TextComputer p3 = new TextComputer("Computer 1", b3, input, output, factory, b3);
+    TextComputer p4 = new TextComputer("Computer 2", b4, input, output, factory, b4);
 
-    App app = new App(p1, p2);
+    App app = new App(p1, p2, p3, p4);
     app.doPlacementPhase();
     assertEquals(bytes.toString(), bytes1.toString());
   }
@@ -70,6 +74,8 @@ class AppTest {
   void test_do_attack_phase_player2_win() throws IOException{
     Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
     Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b3 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b4 = new BattleShipBoard<Character>(10, 20, 'X');
     BufferedReader input = new BufferedReader(new StringReader("C2\nC0\nC0\nC1\n"));
     V2ShipFactory factory = new V2ShipFactory();
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -80,23 +86,25 @@ class AppTest {
     b2.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
     TextPlayer p1 = new TextPlayer("A", b1, input, output, factory, b2);
     TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory, b1);
+    TextComputer p3 = new TextComputer("Computer 1", b3, input, output, factory, b3);
+    TextComputer p4 = new TextComputer("Computer 2", b4, input, output, factory, b4);
 
-    App app = new App(p1, p2);
+    App app = new App(p1, p2, p3, p4);
 
-    Board<Character> b3 = new BattleShipBoard<Character>(10, 20, 'X');
-    Board<Character> b4 = new BattleShipBoard<Character>(10, 20, 'X');
-    b3.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
-    b4.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
-    BoardTextView expectedView = new BoardTextView(b4);
+    Board<Character> b5 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b6 = new BattleShipBoard<Character>(10, 20, 'X');
+    b5.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    b6.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    BoardTextView expectedView = new BoardTextView(b5);
     StringBuilder res = new StringBuilder();
     res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
     String prompt = "Player A where do you want to fire at?\n" + "You hit a Submarine!\n\n";
     res.append(prompt);
-    b4.fireAt(new Coordinate(2, 0));
+    b6.fireAt(new Coordinate(2, 0));
 
     res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
     res.append(prompt);
-    b4.fireAt(new Coordinate(2, 1));
+    b6.fireAt(new Coordinate(2, 1));
 
     res.append("Player A win the game!\n");
     
@@ -108,6 +116,8 @@ class AppTest {
   void test_do_attack_phase_player1_win() throws IOException{
     Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
     Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b3 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b4 = new BattleShipBoard<Character>(10, 20, 'X');
     BufferedReader input = new BufferedReader(new StringReader("F\nC2\n"));
     V2ShipFactory factory = new V2ShipFactory();
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -117,13 +127,16 @@ class AppTest {
     b1.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
     TextPlayer p1 = new TextPlayer("A", b1, input, output, factory, b2);
     TextPlayer p2 = new TextPlayer("A", b2, input, output1, factory, b1);
+    TextComputer p3 = new TextComputer("Computer 1", b3, input, output, factory, b3);
+    TextComputer p4 = new TextComputer("Computer 2", b4, input, output, factory, b4);
 
-    App app = new App(p1, p2);
-
-    Board<Character> b3 = new BattleShipBoard<Character>(10, 20, 'X');
-    Board<Character> b4 = new BattleShipBoard<Character>(10, 20, 'X');
-    b3.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
-    BoardTextView expectedView = new BoardTextView(b3);
+    App app = new App(p1, p2, p3, p4);
+    app.addHuman();
+    
+    Board<Character> b5 = new BattleShipBoard<Character>(10, 20, 'X');
+    Board<Character> b6 = new BattleShipBoard<Character>(10, 20, 'X');
+    b5.tryAddShip(factory.makeSubmarine(new Placement(new Coordinate(2, 0), 'H')));
+    BoardTextView expectedView = new BoardTextView(b5);
     StringBuilder res = new StringBuilder();
     res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
     String prompt =
@@ -132,7 +145,7 @@ class AppTest {
       " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n" +
       "Player A where do you want to fire at?\n" + "You missed!\n\n";
     res.append(prompt);
-    b3.fireAt(new Coordinate(2, 0));
+    b5.fireAt(new Coordinate(2, 0));
 
     res.append("Player A win the game!\n");
     

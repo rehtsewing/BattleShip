@@ -1,6 +1,7 @@
 package edu.duke.yl883.battleship;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.BufferedReader;
@@ -10,11 +11,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.Function;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class TextPlayerTest {
@@ -26,6 +25,32 @@ public class TextPlayerTest {
     return new TextPlayer("A", board, input, output, shipFactory, board);
   }
 
+  @Test
+  void test_setEnemyBoard_getOwnBoard() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    BufferedReader input = new BufferedReader(new StringReader("B2V\nC8H\na4v\n"));
+    PrintStream output = new PrintStream(bytes, true);
+    Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');  Board<Character> board2 = new BattleShipBoard<Character>(10, 2, 'X');
+    V2ShipFactory shipFactory = new V2ShipFactory();
+    TextPlayer player = new TextPlayer("A", board, input, output, shipFactory, board);
+
+    assertSame(board, player.getOwnBoard());
+    player.setEnemyBoard(board2);
+  }
+
+  @Test
+  void test_player_selection() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10, 20, "S\nY\nN\n", bytes);
+    player.doPlayerSelection();
+    player.doPlayerSelection();
+
+    String prompt = "Do you want to select A in this game?\n" +
+      "Y yes\n" + "N no\n";
+    String res = "Invalid choice number S\n";
+    assertEquals(prompt + res + prompt + prompt, bytes.toString());
+
+  }
   @Test
   void test_read_placement() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -81,7 +106,6 @@ public class TextPlayerTest {
     bytes.reset();
     TextPlayer player3 = createTextPlayer(10, 20, "A9H\nA0V\n", bytes);
     String promptAll = "That placement is invalid: the ship goes off the right of the board.\n";
-
     errorHandleHelper(promptAll, player3, bytes);
   }
   
@@ -93,31 +117,34 @@ public class TextPlayerTest {
     BoardTextView expectView = new BoardTextView(b1);
 
     String start = "Player A's turn:\n";
-    String prompt = "Player A where do you want to fire at?\n";
-    promptAll = start + expectView.displayMyBoardWithEnemyNextToIt(expectView, "Your Ocean", "Enemy's Ocean") + "\n" + prompt + promptAll + prompt;
+    String prompt1 =
+      "Possible actions for Player A:\n\n" + " F Fire at a square\n" +
+      " M Move a ship to another square (2 remaining)\n" +
+      " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n\n";
+    String prompt2 = "Player A where do you want to fire at?\n";
+    promptAll = start + expectView.displayMyBoardWithEnemyNextToIt(expectView, "Your Ocean", "Enemy's Ocean") + "\n" + prompt1 + prompt2 + promptAll + prompt2;
 
     player.playOneTurn();
     assertEquals(promptAll + "You missed!\n" + "\n", bytes.toString());
   }
-@Disabled
   @Test
   void test_coordinate_error_handling() throws IOException {
     //EOF problem
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    TextPlayer player = createTextPlayer(10, 20, "", bytes);
+    TextPlayer player = createTextPlayer(10, 20, "F\n", bytes);
 
     V2ShipFactory f = new V2ShipFactory();
     assertThrows(EOFException.class, ()->player.playOneTurn());
 
     //invalid row
     bytes.reset();
-    TextPlayer player1 = createTextPlayer(10, 20, "12\nA0\n", bytes);
+    TextPlayer player1 = createTextPlayer(10, 20, "F\n12\nA0\n", bytes);
     String promptAll1 = "That coordinate is invalid: it does not have the correct format.\n";
     attackErrorHandleHelper(promptAll1, player1, bytes);
   
     //Invalid col
     bytes.reset();
-    TextPlayer player2 = createTextPlayer(10, 20, "AAV\nA0\n", bytes);
+    TextPlayer player2 = createTextPlayer(10, 20, "F\nAAV\nA0\n", bytes);
     attackErrorHandleHelper(promptAll1, player2, bytes);
   
   }
@@ -242,6 +269,42 @@ public class TextPlayerTest {
     b1.fireAt(new Coordinate(2, 2));
     assertEquals(res.toString(), bytes.toString());
     }
+  @Test
+  void test_do_one_action() throws IOException {
+
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    BufferedReader input = new BufferedReader(new StringReader("F\nC2\nS\nC2\nM\nC2\nC3V\n"));
+    PrintStream output = new PrintStream(bytes, true);
+    Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');
+    V2ShipFactory shipFactory = new V2ShipFactory();
+    
+    TextPlayer player = new TextPlayer("A", board, input, output, shipFactory, board);
+    board.tryAddShip(shipFactory.makeSubmarine(new Placement(new Coordinate(1, 2), 'V')));
+    player.doOneAction();
+    player.doOneAction();
+    player.doOneAction();
+    
+    Board<Character> b1 = new BattleShipBoard<>(10, 20, 'X');
+    V2ShipFactory f = new V2ShipFactory();
+
+    b1.tryAddShip(shipFactory.makeSubmarine(new Placement(new Coordinate(1, 2), 'V')));
+    BoardTextView expectedView = new BoardTextView(b1);
+    StringBuilder res = new StringBuilder();
+    String prompt1 = "Player A, what would you like to do?\n\n";
+
+    String prompt2 = "Player A where do you want to fire at?\n" + "You hit a Submarine!\n\n";
+    res.append(prompt1 + prompt2);
+    b1.fireAt(new Coordinate(1, 2));
+
+    String prompt3 = "Player A where do you want to do sonar scan?\n" +
+      "Submarines occupy 1 squares\n" +
+      "Destroyers occupy 0 squares\n" +
+      "Battleships occupy 0 squares\n" +
+      "Carriers occupy 0 squares\n\n";
+    String prompt4 = "Player A which ship would you like to choose?\n" + "Player A where do you want to place this Submarine?\n\n";
+    res.append(prompt1+prompt3+prompt1+prompt4);
+    assertEquals(res.toString(), bytes.toString());
+    }
 
   @Test
   void test_conduct_scan() throws IOException {
@@ -324,14 +387,13 @@ public class TextPlayerTest {
   void test_conduct_move() throws IOException {
 
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    BufferedReader input = new BufferedReader(new StringReader("M\nB2\nI0H\nF\nC2\n"));
+    BufferedReader input = new BufferedReader(new StringReader("M\nB2\nI0H\n"));
     PrintStream output = new PrintStream(bytes, true);
     Board<Character> board = new BattleShipBoard<Character>(10, 20, 'X');
     V2ShipFactory shipFactory = new V2ShipFactory();
     
     TextPlayer player = new TextPlayer("A", board, input, output, shipFactory, board);
     board.tryAddShip(shipFactory.makeSubmarine(new Placement(new Coordinate(0, 2), 'V')));
-    player.playOneTurn();
     player.playOneTurn();
     
     Board<Character> b1 = new BattleShipBoard<>(10, 20, 'X');
@@ -352,14 +414,9 @@ public class TextPlayerTest {
     Coordinate destination = new Coordinate(8, 0);
     Ship<Character> mid = player.defaultOriShip(s);
     Ship<Character> mid1 = player.shipAfterMove(s, destination, 'H');
-    b1.tryAddShip(mid1);
-
-    String prompt3 = "Player A where do you want to fire at?\n" + "You missed!\n\n";
-    res.append("Player A's turn:\n" + expectedView.displayMyBoardWithEnemyNextToIt(expectedView, "Your Ocean", "Enemy's Ocean") + "\n");
-    res.append(prompt1+prompt3);
-    b1.fireAt(new Coordinate(2, 2));
     assertEquals(res.toString(), bytes.toString());
     }
+
 }
     
 

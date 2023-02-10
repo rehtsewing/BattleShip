@@ -11,36 +11,40 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 /** Player pattern in text mode */
-public class TextPlayer {
-  /**
-   * theBoard is the my own Board for the App
-   * enemyBoard is the enemy Board for the App
-   * view is the Text view of the board
-   * enemyView is the Text view of the enemy board
-   * inputReader is a bufferedReader of the App
-   * out is the stream to be printed to
-   * shipFactory is object to make ship
-   */
-  final Board<Character> theBoard, enemyBoard;
-  final BoardTextView view, enemyView;
-  final BufferedReader inputReader;
-  final PrintStream out;
-  final AbstractShipFactory<Character> shipFactory;
-  final String name;
-  /** ArrayList of the ships' name*/
-  final ArrayList<String> shipsToPlace;
-  /** A map from ship name to the lambda 
-   * takes a placement and return a Ship
-   */
-  final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
-  /** A map from ship name to whether it is a version
-   * 2 special ship
-   */
-  final HashMap<String, Boolean> shipCreationVersion;
-  /** Number of uses remaining for move ship
-   *  and sonar scan
-   */
-  final int moveShipNum, sonarScanNum;
+public class TextPlayer extends AbstractTextUser{
+  // /**
+  //  * theBoard is the my own Board for the App
+  //  * enemyBoard is the enemy Board for the App
+  //  * view is the Text view of the board
+  //  * enemyView is the Text view of the enemy board
+  //  * inputReader is a bufferedReader of the App
+  //  * out is the stream to be printed to
+  //  * shipFactory is object to make ship
+  //  */
+  // final Board<Character> theBoard;
+  // Board<Character> enemyBoard;
+  // final BoardTextView view, enemyView;
+  // final BufferedReader inputReader;
+  // final PrintStream out;
+  // final AbstractShipFactory<Character> shipFactory;
+  // final String name;
+  // /** ArrayList of the ships' name*/
+  // final ArrayList<String> shipsToPlace;
+  // /** A map from ship name to the lambda 
+  //  * takes a placement and return a Ship
+  //  */
+  // final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
+  // /** A map from ship name to whether it is a version
+  //  * 2 special ship
+  //  */
+  // final HashMap<String, Boolean> shipCreationVersion;
+  // /** Number of uses remaining for move ship
+  //  *  and sonar scan
+  //  */
+  // int moveShipNum, sonarScanNum;
+  // /** Whether this player is selected for the game*/
+  // final boolean selected;
+
   /**
    * Construct the textplayer with specfied name, board,
    * BufferedReader, PrintStream and factory
@@ -48,48 +52,77 @@ public class TextPlayer {
    * @param theBoard    is board used for current player
    * @param input is the input reader for current player
    * @param out         is the out stream for current player
-   * @param f is version 1 ship factory of current player 
+   * @param f is version 1 ship factory of current player
+   * @param isComputer indicate whether this player is computer 
    */
   public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V2ShipFactory f, Board<Character> enemyBoard) {
-    this.name = name;
-    this.theBoard = theBoard;
-    this.enemyBoard = enemyBoard;
-    this.view = new BoardTextView(theBoard);
-    this.enemyView = new BoardTextView(enemyBoard);
-    this.inputReader = input;
-    this.out = out;
-    this.shipFactory = f;
-    this.shipsToPlace = new ArrayList<String>();
-    this.shipCreationFns = new HashMap<String, Function<Placement, Ship<Character>>>();
-    this.shipCreationVersion = new HashMap<String, Boolean>();
-    this.moveShipNum = 2;
-    this.sonarScanNum = 1;
-    setupShipCreationBool();
-    setupShipCreationMap();
-    setupShipCreationList();
+    super(name, theBoard, input, out, f, enemyBoard);
+    // this.name = name;
+    // this.theBoard = theBoard;
+    // this.enemyBoard = enemyBoard;
+    // this.view = new BoardTextView(theBoard);
+    // this.enemyView = new BoardTextView(enemyBoard);
+    // this.inputReader = input;
+    // this.out = out;
+    // this.shipFactory = f;
+    // this.isComputer = isComputer;
+    // this.selected = false;
+    // this.shipsToPlace = new ArrayList<String>();
+    // this.shipCreationFns = new HashMap<String, Function<Placement, Ship<Character>>>();
+    // this.shipCreationVersion = new HashMap<String, Boolean>();
+    // this.moveShipNum = 2;
+    // this.sonarScanNum = 1;
+    // setupShipCreationBool();
+    // setupShipCreationMap();
+    // setupShipCreationList();
   }
-  /** Set up the shipCreationFns Hashmap*/
-  protected void setupShipCreationMap() {
-    shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
-    shipCreationFns.put("Battleship", (p) -> shipFactory.makeBattleship(p));
-    shipCreationFns.put("Carrier", (p) -> shipFactory.makeCarrier(p));
-    shipCreationFns.put("Destroyer", (p) -> shipFactory.makeDestroyer(p));
-  }
-  /** Set up the ship name ArrayList*/
-  protected void setupShipCreationList() {
-     shipsToPlace.addAll(Collections.nCopies(2, "Submarine"));
-     shipsToPlace.addAll(Collections.nCopies(3, "Destroyer"));
-     shipsToPlace.addAll(Collections.nCopies(3, "Battleship"));
-     shipsToPlace.addAll(Collections.nCopies(2, "Carrier"));
-  }
-  /** Set up the shipCreationVersion Hashmap*/
-  protected void setupShipCreationBool() {
-    shipCreationVersion.put("Submarine", false);
-    shipCreationVersion.put("Battleship", true);
-    shipCreationVersion.put("Carrier", true);
-    shipCreationVersion.put("Destroyer", false);
-  }
-
+  // /** Set up the shipCreationFns Hashmap*/
+  // protected void setupShipCreationMap() {
+  //   shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
+  //   shipCreationFns.put("Battleship", (p) -> shipFactory.makeBattleship(p));
+  //   shipCreationFns.put("Carrier", (p) -> shipFactory.makeCarrier(p));
+  //   shipCreationFns.put("Destroyer", (p) -> shipFactory.makeDestroyer(p));
+  // }
+  // /** Set up the ship name ArrayList*/
+  // protected void setupShipCreationList() {
+  //    shipsToPlace.addAll(Collections.nCopies(2, "Submarine"));
+  //    shipsToPlace.addAll(Collections.nCopies(3, "Destroyer"));
+  //    shipsToPlace.addAll(Collections.nCopies(3, "Battleship"));
+  //    shipsToPlace.addAll(Collections.nCopies(2, "Carrier"));
+  // }
+  // /** Set up the shipCreationVersion Hashmap*/
+  // protected void setupShipCreationBool() {
+  //   shipCreationVersion.put("Submarine", false);
+  //   shipCreationVersion.put("Battleship", true);
+  //   shipCreationVersion.put("Carrier", true);
+  //   shipCreationVersion.put("Destroyer", false);
+  // }
+  // /** set the enemyBoard
+  //  * @param enemy is enemybord to be set*/
+  // public void setEnemyBoard(Board<Character> enemy) {
+  //   enemyBoard = enemy;
+  // }
+  // /** get own board
+  //  * @return theBoard*/
+  // public Board<Character> getOwnBoard() {
+  //   return theBoard;
+  // }
+  // /**
+  //  * Decide whether this player is select 
+  //  * for current game
+  //  * @return true if select, false otherwise
+  //  */
+  // public boolean doPlayerSelection() throws IOException{
+  //   out.println("Do you want to select " + name + " in this game?\n");
+  //   out.println("Y yes\n" + "N no\n");
+  //   String s = inputReader.readLine();
+  //   if(s.equals("Y")) return true;
+  //   else if(s.equals("N")) return false;
+  //   else {
+  //     out.println("Invalid choice number " + s);
+  //     return doPlayerSelection();
+  //   }
+  // }
   /**
    * Create a Placement object from the information
    * in input reader and handle the IllegalArgumentException 
@@ -125,6 +158,7 @@ public class TextPlayer {
    * @param createFn is an apply method that takes
    * a Placement and return a ship
    */
+  @Override
   public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
     Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?", shipCreationVersion.get(shipName));
     Ship<Character> s = createFn.apply(p);
@@ -143,6 +177,7 @@ public class TextPlayer {
    *     but also shown again near the top of this file)
    * (c) Recursively Call doOnePlacement to place all ships
    */
+  @Override
   public void doPlacementPhase() throws IOException {
     out.println(view.displayMyOwnBoard());
 
@@ -163,18 +198,18 @@ public class TextPlayer {
       doOnePlacement(name, shipCreationFns.get(name));
     }
   }
-  /**
-   * Check for the win/lose of the player
-   * @return true if this player win
-   *        false if not win yet 
-   */
-  public boolean isWin() {
-    if(enemyBoard.loseCheck()) {
-      out.println("Player " + name + " win the game!");
-      return true;
-    }
-    return false;
-  }
+  // /**
+  //  * Check for the win/lose of the player
+  //  * @return true if this player win
+  //  *        false if not win yet 
+  //  */
+  // public boolean isWin() {
+  //   if(enemyBoard.loseCheck()) {
+  //     out.println("Player " + name + " win the game!");
+  //     return true;
+  //   }
+  //   return false;
+  // }
   
   /**
    * Display board relevant information
@@ -182,6 +217,7 @@ public class TextPlayer {
    * Get a ship by firing at the coordinate
    * Print relevant info according to the gotten ship
    */
+  @Override
   public void playOneTurn() throws IOException {
     out.println("Player " + name + "'s turn:");
     out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Enemy's Ocean"));
@@ -201,17 +237,24 @@ public class TextPlayer {
    * @throw IllegalArgumentException if action letter 
    *        is not F, M or S
    */
+  @Override
   public void doOneAction() throws IOException{
     out.println("Player " + name + ", what would you like to do?\n");
     String s = inputReader.readLine();
     if(s.equals("F")) conductFire();
-    else if(s.equals("M")) conductMove();
-    else if(s.equals("S")) conductScan();
+    else if(s.equals("M") && moveShipNum > 0) {
+      moveShipNum -= 1;
+      conductMove();
+    } else if(s.equals("S") && sonarScanNum > 0) {
+      sonarScanNum -= 1;
+      conductScan();
+    }
     else throw new IllegalArgumentException("Invalid action number " + s);
   }
   /**
    * Conduct fireat action
    */
+  @Override
   public void conductFire() throws IOException{
     Coordinate c = readCoordinate("Player " + name + " where do you want to fire at?");
     Ship<Character> s = enemyBoard.fireAt(c);
