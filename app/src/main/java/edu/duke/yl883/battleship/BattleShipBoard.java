@@ -31,7 +31,8 @@ public class BattleShipBoard<T> implements Board<T> {
   private final PlacementRuleChecker<T> placementChecker;
   /** Record the where enemy has missed*/
   /** Points hidden to enemy*/
-  HashSet<Coordinate> enemyMisses, hidePoints;
+  /** Hit point on the moved ship in the original place*/
+  protected HashSet<Coordinate> enemyMisses, hidePoints, movedHitPoints;
   /** Sign for missed information*/
   final T missInfo;
   /**
@@ -151,7 +152,7 @@ public class BattleShipBoard<T> implements Board<T> {
     if(!isSelf) {
       for(Ship<T> s : movedShips) {
         if(s.occupiesCoordinates(where)) {
-          if(s.wasHitAt(where)) return s.getDisplayInfoAt(where, isSelf); 
+          return s.getDisplayInfoAt(where, isSelf); 
         }
       }
       if(enemyMisses.contains(where)) return missInfo;

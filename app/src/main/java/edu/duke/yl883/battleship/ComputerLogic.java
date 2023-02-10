@@ -61,8 +61,8 @@ public class ComputerLogic {
    * @return play logic string
    */
   private void makePLayLogic() {
-    for(int i = 0; i < 10; i++) {
-      for(int j = 0; j < 20; j++) {
+    for(int i = 0; i < 20; i++) {
+      for(int j = 0; j < 10; j++) {
         char row = 'A';
         row += i;
         String s = row + "" + j;

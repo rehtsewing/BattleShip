@@ -82,12 +82,66 @@ public class BattleShipBoardTest {
     b1.tryAddShip(s1); //return a string if add ship failed
     assertSame(s1, b1.fireAt(new Coordinate(3, 0)));
     assertEquals(false, s1.isSunk());
+    assertEquals(null, b1.fireAt(new Coordinate(4, 1)));
+    assertEquals('X',b1.whatIsAtForEnemy(new Coordinate(4, 1)));
+    assertEquals(false, s1.isSunk());
+    
+    assertEquals(null, b1.fireAt(new Coordinate(4, 1)));
+    assertEquals('X',b1.whatIsAtForEnemy(new Coordinate(4, 1)));
+    assertEquals(false, s1.isSunk());
     assertSame(s1, b1.fireAt(new Coordinate(4, 0)));
-    assertEquals(false, s1.isSunk());
-    assertEquals(null, b1.fireAt(new Coordinate(3, 1)));
-    assertEquals(false, s1.isSunk());
     assertSame(s1, b1.fireAt(new Coordinate(5, 0)));
     assertEquals(true, s1.isSunk());
+  }
+  @Test
+  public void test_add_hide_ship() {
+    int wid = 5;
+    int col = 6;
+    V1ShipFactory f = new V1ShipFactory();
+    Ship<Character> s1 = f.makeDestroyer(new Placement(new Coordinate(0, 0), 'V'));
+    Ship<Character> s2 = f.makeDestroyer(new Placement(new Coordinate(0, 1), 'V'));
+    BattleShipBoard<Character> b1 = new BattleShipBoard<>(wid, col, 'X');
+    BattleShipBoard<Character> b2 = new BattleShipBoard<>(wid, col, 'X');
+    b1.tryAddShip(s1); //return a string if add ship failed
+    b2.tryAddShip(s2);
+    Coordinate where = new Coordinate(0, 0);
+    assertSame(s1, b1.fireAt(where));
+    Ship<Character> s3 = b1.takeoutShip(where);
+    assertEquals('d', b1.whatIsAtForEnemy(where));
+    assertEquals(null, b1.whatIsAtForSelf(where));
+    //what is at enemy if case
+    b1.fireAt(where);
+    assertEquals('X', b1.whatIsAtForEnemy(where));
+    assertEquals(null, b1.whatIsAtForSelf(where));
+    
+    
+    String note = b1.tryAddHideShip(s3);
+    assertEquals(null, note);
+    assertEquals('*', b1.whatIsAtForSelf(where));
+    assertEquals('X', b1.whatIsAtForEnemy(where));
+    b1.fireAt(new Coordinate(1, 0));
+    assertEquals('*', b1.whatIsAtForSelf(new Coordinate(1, 0)));
+    assertEquals('d', b1.whatIsAtForEnemy(new Coordinate(1, 0)));
+    assertEquals(null, b1.whatIsAtForEnemy(new Coordinate(0, 1)));
+
+    Coordinate hide = new Coordinate(1, 1);
+    Coordinate miss = new Coordinate(0, 1);
+    b2.fireAt(hide);
+    b1.fireAt(miss);
+    Ship<Character> s4 = b2.takeoutShip(miss);
+    b1.tryAddHideShip(s4);
+    assertEquals('d', b1.whatIsAtForSelf(miss));
+    assertEquals('X', b1.whatIsAtForEnemy(miss));
+    assertEquals('*', b1.whatIsAtForSelf(hide));
+    assertEquals(null, b1.whatIsAtForEnemy(hide));
+    //test for two if statement in fire at
+    b1.fireAt(hide);
+    assertEquals('*', b1.whatIsAtForSelf(hide));
+    assertEquals('d', b1.whatIsAtForEnemy(hide));
+    b1.fireAt(miss);
+    assertEquals('*', b1.whatIsAtForSelf(miss));
+    assertEquals('d', b1.whatIsAtForEnemy(miss));
+    
   }
   @Test
   public void test_takeout_ship() {

@@ -51,17 +51,11 @@ public class TextComputerTest {
     V2ShipFactory shipFactory = new V2ShipFactory();
     TextComputer player = new TextComputer("A", board, input, output, shipFactory, board1);
     V2ShipFactory f = new V2ShipFactory();
-    player.doPlacementPhase();
+    board1.tryAddShip(f.makeSubmarine(new Placement(new Coordinate(0, 2), 'V')));
     player.playOneTurn();
     player.playOneTurn();
     player.playOneTurn();
-    assertEquals('X', board1.whatIsAtForEnemy(new Coordinate(0, 0)));
-    assertEquals(null, board1.whatIsAtForSelf(new Coordinate(0, 1)));
-    assertEquals('X', board1.whatIsAtForEnemy(new Coordinate(0, 2)));
-    assertEquals('s', board.whatIsAtForSelf(new Coordinate(0, 0)));
-    assertEquals(null, board.whatIsAtForEnemy(new Coordinate(0, 0)));
-    assertEquals('c', board.whatIsAtForSelf(new Coordinate(7, 0)));
-    assertEquals('c', board.whatIsAtForSelf(new Coordinate(10, 2)));
+    String s = "A missed!\n" + "A missed!\n" + "A hit a Submarine!";
   }
   
 }

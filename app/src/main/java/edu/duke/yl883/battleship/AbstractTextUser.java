@@ -22,8 +22,9 @@ public abstract class AbstractTextUser implements TextUser{
    * shipFactory is object to make ship
    */
   final Board<Character> theBoard;
-  Board<Character> enemyBoard;
-  final BoardTextView view, enemyView;
+  protected Board<Character> enemyBoard;
+  final BoardTextView view;
+  protected BoardTextView enemyView;
   final BufferedReader inputReader;
   final PrintStream out;
   final AbstractShipFactory<Character> shipFactory;
@@ -99,6 +100,7 @@ public abstract class AbstractTextUser implements TextUser{
   @Override
   public void setEnemyBoard(Board<Character> enemy) {
     enemyBoard = enemy;
+    enemyView = new BoardTextView(enemyBoard);
   }
   /** {@inheritDoc}*/
   @Override
@@ -110,7 +112,7 @@ public abstract class AbstractTextUser implements TextUser{
   public boolean doPlayerSelection() throws IOException{
     out.println("Do you want to select " + name + " in this game?");
     out.println("Y yes\n" + "N no");
-    String s = inputReader.readLine();
+    String s = inputReader.readLine().toUpperCase();
     if(s.equals("Y")) return true;
     else if(s.equals("N")) return false;
     else {

@@ -47,6 +47,11 @@ public class TextComputer extends AbstractTextUser{
   public void conductFire() throws IOException {
     String coord = cl.nextAction();
     Coordinate c = new Coordinate(coord);
-    enemyBoard.fireAt(c);
-  }
+    Ship<Character> s = enemyBoard.fireAt(c);
+   if(s != null) {
+     out.println(name + " hit a " + s.getName() + "!\n");
+    } else {
+      out.println(name + " missed!\n");
+    }
+   }
 }
