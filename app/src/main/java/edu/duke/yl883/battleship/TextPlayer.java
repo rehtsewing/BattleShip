@@ -102,11 +102,17 @@ public class TextPlayer extends AbstractTextUser{
     out.println(" F Fire at a square\n" +
                 " M Move a ship to another square (" +  moveShipNum + " remaining)\n" +
                 " S Sonar scan (" + sonarScanNum + " remaining)\n");
-    try {
+    handleOneAction();
+  }
+  /**
+   * Handle possible error from doOneAction
+   */
+  private void handleOneAction() throws IOException{
+      try {
       doOneAction();
     } catch(IllegalArgumentException e) {
-      out.println("That action is invalid: it does not have the correct format.");
-      doOneAction();
+      out.println("That action is invalid: it does not have the correct format or current action is exhausted.");
+      handleOneAction();
     }
   }
   /** 
@@ -117,7 +123,7 @@ public class TextPlayer extends AbstractTextUser{
   @Override
   public void doOneAction() throws IOException{
     out.println("Player " + name + ", what would you like to do?");
-    String s = inputReader.readLine();
+    String s = inputReader.readLine().toUpperCase();
     if(s.equals("F")) conductFire();
     else if(s.equals("M") && moveShipNum > 0) {
       moveShipNum -= 1;
@@ -251,7 +257,7 @@ public class TextPlayer extends AbstractTextUser{
       throw new EOFException("Not enough coordinate entered");
     }
     try {
-      Coordinate c = new Coordinate(s);
+      Coordinate c = new Coordinate(s, theBoard.getWidth(), theBoard.getHeight());
     } catch(IllegalArgumentException e) {
       out.println("That coordinate is invalid: it does not have the correct format.");
       return readCoordinate(prompt);

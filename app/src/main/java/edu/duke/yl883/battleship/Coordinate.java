@@ -30,6 +30,8 @@ public class Coordinate {
    * "A2"
    * 
    * @param descr is the string taken to construct the coordinate
+   * @param width is width of the board
+   * @param height is height of the board
    * @throws IllegalArgumentException if length of the string not 
    *      equals to 2
    * @throws IllegalArgumentException if column letter is not
@@ -37,21 +39,24 @@ public class Coordinate {
    * @throws IllegalArgumentException if row letter is not
    *      between A to Z 
   */
-  public Coordinate(String descr) {
+  public Coordinate(String descr, int width, int height) {
     if (descr.length() != 2) {
       throw new IllegalArgumentException("Length of the string taken should be equal to 2 but is " + descr.length());
     }
     descr = descr.toUpperCase();
     char colLetter = descr.charAt(1);
     char rowLetter = descr.charAt(0);
-    if (colLetter < '0' || colLetter > '9') {
+    if (colLetter < '0' || colLetter > '0' + width - 1) {
       throw new IllegalArgumentException("Invalid column letter" + colLetter);
     }
-    if (rowLetter < 'A' || rowLetter > 'Z') {
+    if (rowLetter < 'A' || rowLetter > 'A' + height - 1) {
       throw new IllegalArgumentException("Invalid row letter" + rowLetter);
     }
     this.row = rowLetter - 'A';
     this.column = colLetter - '0';
+  }
+  public Coordinate(String descr) {
+    this(descr, 10, 26);
   }
 
   /**

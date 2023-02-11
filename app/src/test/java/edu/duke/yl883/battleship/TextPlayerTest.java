@@ -258,7 +258,7 @@ public class TextPlayerTest {
       " M Move a ship to another square (2 remaining)\n" +
       " S Sonar scan (1 remaining)\n\n" + "Player A, what would you like to do?\n";
     String prompt =
-      "That action is invalid: it does not have the correct format.\n" +
+      "That action is invalid: it does not have the correct format or current action is exhausted.\n" +
       "Player A, what would you like to do?\n" +
       "Player A where do you want to fire at?\n" +
       "You hit a Submarine!\n\n";
