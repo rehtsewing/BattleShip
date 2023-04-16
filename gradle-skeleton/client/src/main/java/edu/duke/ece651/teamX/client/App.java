@@ -4,6 +4,8 @@
 package edu.duke.ece651.teamX.client;
 
 
+import edu.duke.ece651.teamX.shared.Client;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

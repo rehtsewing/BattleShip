@@ -1,11 +1,7 @@
-package edu.duke.ece651.teamX.client;
+package edu.duke.ece651.teamX.shared;
 
 
 import java.io.*;
-import java.net.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.util.Scanner;
 
 /** Client pattern of the game*/
 public class Client {

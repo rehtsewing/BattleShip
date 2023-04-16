@@ -1,4 +1,4 @@
-package edu.duke.ece651.teamX.client;
+package edu.duke.ece651.teamX.shared;
 
 import java.io.*;
 import java.net.Socket;
