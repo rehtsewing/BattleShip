@@ -86,7 +86,7 @@ public class ClientHandlerThread extends Thread {
         }
         status = -1;
         System.out.println("end!!!!!");
-//        doSynchronization();
+        doSynchronization();
     }
     public int getStatus() {
         return status;

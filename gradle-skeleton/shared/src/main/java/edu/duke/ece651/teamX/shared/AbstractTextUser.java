@@ -166,7 +166,7 @@ public abstract class AbstractTextUser implements TextUser{
   public boolean isWin() {
     if(enemyBoard.loseCheck()) {
       if(!isComputer()) {
-        send("Player " + name + " win the game!");
+        send(name);
       }
       return true;
     }

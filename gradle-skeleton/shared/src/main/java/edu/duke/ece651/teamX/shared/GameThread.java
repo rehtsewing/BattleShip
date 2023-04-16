@@ -140,12 +140,19 @@ public class GameThread extends Thread {
                     }
                 }
                 if(!checkFinish()) break;
-                while(!checkConnection()) {}
+                if(!checkConnection()) {
+                    setWinner("Game interrupt, no one");
+                    flag = 1-flag;
+                }
                 notifyClients();
             }
             System.out.println("game end!!!");
             //add stop thread
         } finally {
+            for(ClientHandlerThread th : clientThreads) {
+                th.status = -1;
+                th.interrupt();
+            }
             for (int i = 0; i < accounts.size(); i++) {
                 accounts.get(i).deleteEndGame(this, i);
             }
@@ -173,9 +180,9 @@ public class GameThread extends Thread {
     }
     public boolean checkConnection() {
         for(TextUser p : players) {
-            if(p.isConnected()) return true;
+            if(!p.isConnected()) return false;
         }
-        return false;
+        return true;
     }
     public synchronized void notifyClients() {
         notifyAll(); // Notify all waiting threads

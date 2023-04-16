@@ -135,9 +135,11 @@ public class Client {
     }
     public void joinNewChoice() throws IOException {
         String computer = input.readLine();
+        winner = "no winner";
         if(computer.equals("C") || computer.equals("H")){
             serverStream.send(computer);
             if(computer.equals("C")) withComputer = true;
+            else withComputer = false;
         }else {
             System.out.println("Your input is: "+ computer + " Should be H/C");
             joinNewChoice();
@@ -159,23 +161,25 @@ public class Client {
 
     public void doAllTurns() throws IOException {
         while(!isOver()) {//keep running if no one wins
-            if(status % 2 != 0 || status == 0) {
-                    doOneTurn();
-            }
+            doOneTurn();
+            if(isOver()) break;
+//            if(status % 2 != 0 || status == 0) {
+//
+//            }
             reportResult();
 
             if(!isRunning) break;
 //            System.out.println("outcome reach");
         }
     }
-    public void reportResult() throws IOException{
+    public boolean reportResult() throws IOException{
         status = 0;
         receiveWinner();
         if(isOver()){
-            out.println(winner);
-
+            out.println(winner + " win the game.");
+            return true;
         }
-
+        return false;
     }
 
     /**
@@ -183,7 +187,7 @@ public class Client {
      * @throws IOException if something wrong with receive
      */
     public void receivePlaceMessage()throws  IOException{
-        if(status > 1) return;
+//        if(status > 1) return;
         System.out.println(serverStream.read());
         System.out.println(serverStream.read());
 
@@ -203,7 +207,7 @@ public class Client {
      * @throws IOException if something wrong with receive
      */
     public void doInitialPlacement() throws IOException{
-        if(status > 2) return;
+//        if(status > 2) return;
         int placementTimes = 10;//Integer.parseInt(serverStream.read());
         int i=0;
         while(i < placementTimes){
@@ -248,7 +252,9 @@ public class Client {
             out.println("computer result");
             out.println(serverStream.read());
         }
-        reportResult();
+        if(reportResult()) {
+            return;
+        }
         serverStream.receive();
         out.print(serverStream.getBuffer());
         while (true) {
