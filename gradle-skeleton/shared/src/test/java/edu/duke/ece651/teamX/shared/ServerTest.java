@@ -17,7 +17,7 @@ public class ServerTest {
 
     @Test
     public void testConstructor() throws Exception {
-        ServerSocket ss = new ServerSocket(1237);
+        ServerSocket ss = new ServerSocket(1298);
 
         Server s = new Server(ss);
         Thread serverThread = new Thread(() -> {
@@ -26,7 +26,7 @@ public class ServerTest {
         serverThread.start();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        Client clis = new Client(1237, "localhost", in);
+        Client clis = new Client(1298, "localhost", in);
         s.stop();
         serverThread.join();
         ss.close();
@@ -51,14 +51,21 @@ public class ServerTest {
         BufferedReader clientReader1 = mock(BufferedReader.class);
         Client cli1 = new Client(1237, "localhost", clientReader1);
 
-        when(clientReader1.readLine()).thenReturn("L").thenReturn("qwe").thenReturn("123").thenReturn("N").
+        when(clientReader1.readLine()).thenReturn("L").thenReturn("qwe").thenReturn("12").thenReturn("L").thenReturn("qwe").thenReturn("123").thenReturn("N").
                 thenReturn("H");
 
+        BufferedReader clientReader2 = mock(BufferedReader.class);
+        Client cli2 = new Client(1237, "localhost", clientReader2);
+
+        when(clientReader2.readLine()).thenReturn("S").thenReturn("qwe").thenReturn("123").thenReturn("S").thenReturn("we").thenReturn("123").thenReturn("N").
+                thenReturn("H");
 
         cli.doLoginOrSignup();
         cli.joinNewGame();
         cli1.doLoginOrSignup();
         cli1.joinNewGame();
+        cli2.doLoginOrSignup();
+        cli2.joinNewGame();
         s.stop();
         serverThread.interrupt();
         serverThread.join();

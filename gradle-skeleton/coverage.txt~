@@ -1,0 +1,60 @@
++---------------------------------------+-----------------+------------+-----------+-----------+---------+
+|              Class Name               | Total Coverage% | Cvrd Stmts | Ttl Stmts | Cvrdd Brs | Ttl Brs |
++---------------------------------------+-----------------+------------+-----------+-----------+---------+
+|           teamX.client.App            |        0        |     0      |     5     |     0     |    0    |
+|           teamX.server.App            |        0        |     0      |     4     |     0     |    0    |
+|      teamX.shared.PlayerAccount       |        0        |     0      |    19     |     0     |    4    |
+|     teamX.shared.AbstractTextUser     |        0        |     0      |    64     |     0     |   12    |
+|     teamX.shared.SignUpException      |        0        |     0      |     1     |     0     |    0    |
+|       teamX.shared.TextComputer       |        0        |     0      |    17     |     0     |    2    |
+|        teamX.shared.GameThread        |        0        |     0      |    91     |     0     |   24    |
+|   teamX.shared.ClientHandlerThread    |        0        |     0      |    53     |     0     |   18    |
+|        teamX.shared.TextPlayer        |        0        |     0      |    127    |     0     |   28    |
+|          teamX.shared.Server          |        0        |     0      |    113    |     0     |   26    |
+|      teamX.shared.LoginException      |        0        |     0      |     1     |     0     |    0    |
+|        teamX.shared.BasicShip         |       75        |     31     |    42     |    10     |   12    |
+|          teamX.client.Client          |       82        |    126     |    142    |    26     |   42    |
+|       teamX.client.ServerStream       |       83        |     27     |    31     |     4     |    6    |
+|        teamX.shared.AlienShip         |       90        |     13     |    15     |     6     |    6    |
+|         teamX.client.AppTest          |       100       |     0      |     0     |     0     |    0    |
+|         teamX.server.AppTest          |       100       |     0      |     0     |     0     |    0    |
+|         teamX.shared.TextUser         |       100       |     0      |     0     |     0     |    0    |
+|        teamX.shared.Coordinate        |       100       |     22     |    22     |     8     |    8    |
+|      teamX.shared.V2ShipFactory       |       100       |     39     |    39     |    10     |   10    |
+|        teamX.shared.Placement         |       100       |     29     |    29     |     8     |    8    |
+|           teamX.shared.Ship           |       100       |     0      |     0     |     0     |    0    |
+|     teamX.shared.ShipDisplayInfo      |       100       |     0      |     0     |     0     |    0    |
+|   teamX.shared.AbstractShipFactory    |       100       |     0      |     0     |     0     |    0    |
+|      teamX.shared.BoardTextView       |       100       |     54     |    54     |    14     |   14    |
+|  teamX.shared.SimpleShipDisplayInfo   |       100       |     5      |     5     |     2     |    2    |
+|  teamX.shared.NoCollisionRuleChecker  |       100       |     7      |     7     |     2     |    2    |
+|   teamX.shared.PlacementRuleChecker   |       100       |     7      |     7     |     4     |    4    |
+|          teamX.shared.Board           |       100       |     0      |     0     |     0     |    0    |
+|      teamX.shared.V1ShipFactory       |       100       |     13     |    13     |     4     |    4    |
+|           teamX.shared.App            |       100       |     0      |     0     |     0     |    0    |
+|     teamX.shared.BattleShipBoard      |       100       |     79     |    79     |    42     |   42    |
+|      teamX.shared.ComputerLogic       |       100       |     28     |    28     |     4     |    4    |
+|   teamX.shared.InBoundsRuleChecker    |       100       |     14     |    14     |     8     |    8    |
+|      teamX.shared.RectangleShip       |       100       |     13     |    13     |     4     |    4    |
+|         teamX.shared.AppTest          |       100       |     0      |     0     |     0     |    0    |
+|        teamX.client.ClientTest        |       100       |     50     |    50     |     0     |    0    |
+|      teamX.shared.AlienShipTest       |       100       |     81     |    81     |     0     |    0    |
+|         teamX.shared.ShipTest         |       100       |     0      |     0     |     0     |    0    |
+|    teamX.shared.V1ShipFactoryTest     |       100       |     21     |    21     |     0     |    0    |
+|      teamX.shared.CoordinateTest      |       100       |     47     |    47     |     0     |    0    |
+|    teamX.shared.BoardTextViewTest     |       100       |     60     |    60     |     0     |    0    |
+| teamX.shared.InBoundsRuleCheckerTest  |       100       |     13     |    13     |     0     |    0    |
+|      teamX.shared.PlacementTest       |       100       |     81     |    81     |     0     |    0    |
+|    teamX.shared.ComputerLogicTest     |       100       |     4      |     4     |     0     |    0    |
+|   teamX.shared.BattleShipBoardTest    |       100       |    147     |    147    |     4     |    4    |
+|teamX.shared.SimpleShipDisplayInfoTest |       100       |     6      |     6     |     0     |    0    |
+|      teamX.shared.BasicShipTest       |       100       |     0      |     0     |     0     |    0    |
+|    teamX.shared.RectangleShipTest     |       100       |     59     |    59     |     4     |    4    |
+|    teamX.shared.V2ShipFactoryTest     |       100       |     37     |    37     |     0     |    0    |
+|teamX.shared.NoCollisionRuleCheckerTest|       100       |     26     |    26     |     0     |    0    |
++---------------------------------------+-----------------+------------+-----------+-----------+---------+
+|                Totals                 |       66        |    1139    |   1667    |    164    |   298   |
++---------------------------------------+-----------------+------------+-----------+-----------+---------+
+
+
+Remove Colors From All Buffers

@@ -21,26 +21,12 @@ public class Server {
     private final List<PlayerAccount> accounts;
     final String END_OF_TURN = "END_OF_TURN";
     /**
-     * Constructs a server with specified port
-     *
-     * @param port is the port of the socket
-     */
-    public Server(int port) throws IOException {
-        this(new ServerSocket(port));
-    }
-    /**
      */
     public Server(ServerSocket ss) {
         this.server = ss;
         this.games = new ArrayList<>();
         this.isListening = true;
         this.accounts = new ArrayList<>();
-    }
-    /**
-     * @return the port of the server socket
-     */
-    public int getPort() {
-        return server.getLocalPort();
     }
 
     /** Execute the server */
