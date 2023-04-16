@@ -55,12 +55,10 @@ public class ClientHandlerThread extends Thread {
                 synchronized (gameServer) {
                     player.playOneTurn();
                     if (player.isWin()) {
-                        System.out.println("is win??");
                         gameServer.setWinner(player.getName());
                         break;
                     }
                     if(!gameServer.getWinner().isEmpty() && status != -1) {
-                        System.out.println("send wht" + gameServer.getWinner());
                         if(!player.isComputer()) send(gameServer.getWinner(), output);
                         break;
                     } else if(status != -1){

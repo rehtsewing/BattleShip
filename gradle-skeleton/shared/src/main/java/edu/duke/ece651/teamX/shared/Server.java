@@ -1,5 +1,5 @@
-package edu.duke.ece651.teamX.shared;
 
+package edu.duke.ece651.teamX.shared;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

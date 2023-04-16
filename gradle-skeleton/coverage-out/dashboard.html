@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    
+    
+    <link rel="SHORTCUT ICON" href="img/clover.ico" />
+
+    <link rel="stylesheet" href="aui/css/aui.min.css" media="all"/>
+    <link rel="stylesheet" href="aui/css/aui-experimental.min.css" media="all"/>
+    <!--[if IE 9]><link rel="stylesheet" href="aui/css/aui-ie9.min.css" media="all"/><![endif]-->
+
+    <style type="text/css" media="all">
+        @import url('style.css');
+        @import url('tree.css');
+        
+    </style>
+
+    <script src="jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script src="aui/js/aui.min.js" type="text/javascript"></script>
+    <script src="aui/js/aui-experimental.min.js" type="text/javascript"></script>
+    <script src="aui/js/aui-soy.min.js" type="text/javascript"></script>
+
+    <script src="package-nodes-tree.js" type="text/javascript"></script>
+    <script src="clover-tree.js" type="text/javascript"></script>
+    <script src="clover.js" type="text/javascript"></script>
+    <script src="clover-descriptions.js" type="text/javascript"></script>
+    <script src="cloud.js" type="text/javascript"></script>
+
+            <title>risc</title>
+    </head>
+
+<body onresize="processTreeMapDashJson(treeMapJson);" >
+    <div id="page">
+        
+        
+
+
+<header id="header" role="banner">
+    <nav class="aui-header aui-dropdown2-trigger-group" role="navigation">
+        <div class="aui-header-inner">
+            <div class="aui-header-primary">
+                <h1 id="logo" class="aui-header-logo aui-header-logo-clover">
+                    <a href="http://openclover.org" title="Visit OpenClover home page"><span class="aui-header-logo-device">OpenClover</span></a>
+                </h1>
+                            </div>
+            <div class="aui-header-secondary">
+                <ul class="aui-nav">
+                    <li id="system-help-menu">
+                        <a class="aui-nav-link" title="Open online documentation" target="_blank"
+                           href="http://openclover.org/documentation">
+                            <span class="aui-icon aui-icon-small aui-iconfont-help">&#160;Help</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+        
+        <div class="aui-page-panel">
+            <div class="aui-page-panel-inner">
+                <div class="aui-page-panel-nav aui-page-panel-nav-clover">
+                    
+
+<div class="aui-page-header-inner" style="margin-bottom: 20px;">
+    <div class="aui-page-header-image">
+                <div class="aui-avatar aui-avatar-large aui-avatar-project">
+            <div class="aui-avatar-inner">
+                                    <img src="img/clover_logo_large.png" alt="Clover icon"/>
+                            </div>
+        </div>
+            </div>
+    <div class="aui-page-header-main" >
+        <h1>
+                                        risc
+                                </h1>
+    </div>
+</div>
+
+<nav class="aui-navgroup aui-navgroup-vertical">
+    <div class="aui-navgroup-inner">
+                                            <ul class="aui-nav">
+                <li class="aui-nav-selected">
+                    <a href="dashboard.html">Project overview</a>
+                </li>
+            </ul>
+        
+                <div class="aui-nav-heading packages-nav-heading">
+            <strong>Packages</strong>
+        </div>
+        <div class="aui-nav project-packages">
+            <form method="get" action="#" class="aui package-filter-container">
+                <input type="text" autocomplete="off" class="package-filter text"
+                       placeholder="Type to filter packages..." name="package-filter" id="package-filter"
+                       title="Start typing package name (or part of the name) to search through the tree. Use arrow keys and the Enter key to navigate."/>
+            </form>
+            <p class="package-filter-no-results-message hidden">
+                <small>No results found.</small>
+            </p>
+                                                  <div class="packages-tree-wrapper" data-root-relative="" data-package-name="">
+                <div class="packages-tree-container"></div>
+                <div class="clover-packages-lozenges"></div>
+            </div>
+        </div>
+        
+            </div>
+</nav>                </div>
+                <section class="aui-page-panel-content">
+                    <div class="aui-page-panel-content-clover">
+
+                    
+                    <ol class="aui-nav aui-nav-breadcrumbs">
+            
+        <li><a href="dashboard.html">Project Clover database Sun Apr 16 2023 14:58:23 EDT</a></li>
+    </ol>
+    
+<h1 class="aui-h2-clover">
+            Project overview
+    </h1>
+<div class="aui-tabs horizontal-tabs">
+        <ul class="tabs-menu">
+            <li class="menu-item active-tab">
+            <a href="dashboard.html">Dashboard</a>
+        </li>
+                <li class="menu-item ">
+            <a href="pkg-summary.html"><strong>Application code</strong></a>
+        </li>
+                <li class="menu-item ">
+            <a href="testsrc-pkg-summary.html"><strong>Test code</strong></a>
+        </li>
+        <li class="menu-item ">
+            <a href="test-pkg-summary.html"><strong>Test results</strong></a>
+        </li>
+                <li class="menu-item ">
+            <a href="top-risks.html"><strong>Top risks</strong></a>
+        </li>
+        <li class="menu-item ">
+            <a href="quick-wins.html"><strong>Quick wins</strong></a>
+        </li>
+                                                <li class="menu-item ">
+                <a href="treemap.html"><strong>Coverage tree map</strong></a>
+            </li>
+            </ul>
+    <div class="tabs-pane active-pane" id="tabs-first">
+
+        <div>&#160;</div>
+
+
+
+
+
+
+<div class="aui-group">
+    <div class="aui-item">
+        <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                
+                <h3>
+                    Code coverage
+                    <small style="float:right; font-weight: normal">
+                        36 classes,
+                        773 /
+                        1,530 elements
+                    </small>
+                </h3>
+            </header>
+            <div class="dashboard-widget-content">
+                <div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.50522876</span>50.5%</div><div style="display: table-cell">
+ <div title="50.5% Covered"  style="min-width:200px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:50.5%"></div></div></div></div>
+                <p><a href="pkg-summary.html">See more</a></p>
+            </div>
+        </div>
+
+        <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>
+                    Test results
+                    <small style="float:right; font-weight: normal">
+                        64 /
+                        64 tests
+                        10.49 secs
+                    </small>
+                </h3>
+            </header>
+            <div class="dashboard-widget-content">
+                                    
+
+<div style="display: table; width: 100%">
+            <div class="barGraphValue"><span class="sortValue">1.0</span>100%</div>         <div style="display: table-cell">
+            
+            <div title="0% Errors" style="min-width: 40px;" class="testBarError">
+                <div title="100% of tests passed&lt;br/&gt;0% of tests failed" class="testBarFail" style="width: 100%"><div class="testBarPass" style="width: 100%"></div></div>
+            </div>
+        </div>
+    </div>                                <p><a href="test-pkg-summary.html">See more</a></p>
+            </div>
+        </div>
+
+        <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>Code metrics</h3>
+            </header>
+                         
+
+<div id="$statsId" class="aui-item" style="display: ${display}">
+<div style="display: table">
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Total number of branches in this project">Branches:</label></div>
+        <div class="stats-box-value">290</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Total number of statements in this project">Statements:</label></div>
+        <div class="stats-box-value">1,035</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Total number of methods in this project">Methods:</label></div>
+        <div class="stats-box-value">205</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Total number of classes in this project">Classes:</label></div>
+        <div class="stats-box-value">36</div>
+    </div>
+            <div class="stats-box">
+            <div class="stats-box-label"><label title="Total number of files in this project">Files:</label></div>
+            <div class="stats-box-value">36</div>
+        </div>
+                <div class="stats-box">
+            <div class="stats-box-label"><label title="Total number of packages in this project">Packages:</label></div>
+            <div class="stats-box-value">3</div>
+        </div>
+        <div class="stats-box">
+        <div class="stats-box-label"><label title="Total number of lines of code in this project">LOC:</label></div>
+        <div class="stats-box-value">3,556</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Total number of non-comment lines of code in this project">NCLOC:</label></div>
+        <div class="stats-box-value">1,937</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Cyclomatic complexity is the number of paths in this project">Total complexity:</label></div>
+        <div class="stats-box-value">391</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label">
+            <label title="Complexity density is the complexity divided by the number of statements in this project">Complexity density:</label>
+        </div>
+        <div class="stats-box-value">0.38</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Number of statements per method.">Statements/Method:</label></div>
+        <div class="stats-box-value">5.05</div>
+    </div>
+    <div class="stats-box">
+        <div class="stats-box-label"><label title="Number of methods per class.">Methods/Class:</label></div>
+        <div class="stats-box-value">5.69</div>
+    </div>
+            <div class="stats-box">
+            <div class="stats-box-label"><label title="Number of classes per package.">Classes/Package:</label></div>
+            <div class="stats-box-value">12</div>
+        </div>
+        <div class="stats-box">
+        <div class="stats-box-label"><label title="Complexity divided by the number of methods in this project">Average method complexity:</label></div>
+        <div class="stats-box-value">1.91</div>
+    </div>
+</div>
+
+</div>        </div>
+
+                <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>Class Coverage Distribution</h3>
+            </header>
+            <div class="dashboard-widget-content">
+                <div style="text-align: center">                     <img src="img/classDistrubutionChart.png" alt="img/classDistrubutionChart.png" usemap="#classDistrubutionChart.png"/>
+                </div>
+                <map id="classDistrubutionChart.png" name="classDistrubutionChart.png">
+<area shape="rect" coords="288,15,310,206" title="12 classes have 91-100% coverage" alt="" nohref="nohref"/>
+<area shape="rect" coords="263,159,285,206" title="3 classes have 81-90% coverage" alt="" nohref="nohref"/>
+<area shape="rect" coords="238,191,260,206" title="1 class has 71-80% coverage" alt="" nohref="nohref"/>
+<area shape="rect" coords="38,31,60,206" title="11 classes have 0% coverage" alt="" nohref="nohref"/>
+</map>
+            </div>
+        </div>
+        
+                <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>Class Complexity</h3>
+            </header>
+            <div class="dashboard-widget-content">
+                <div style="text-align: center">
+                    <img src="img/classComplexityChart.png" alt="img/classComplexityChart.png" usemap="#classComplexityChart.png"/>
+                </div>
+                <map id="classComplexityChart.png" name="classComplexityChart.png">
+<area shape="poly" coords="304,183,302,186,299,183,302,181,304,183,304,183" title="Complexity: 7; Coverage: 100%; Class: RectangleShip" alt="" href="edu/duke/ece651/teamX/shared/RectangleShip.html#RectangleShip"/>
+<area shape="poly" coords="304,187,302,189,299,187,302,184,304,187,304,187" title="Complexity: 6; Coverage: 100%; Class: InBoundsRuleChecker" alt="" href="edu/duke/ece651/teamX/shared/InBoundsRuleChecker.html#InBoundsRuleChecker"/>
+<area shape="poly" coords="304,183,302,186,299,183,302,181,304,183,304,183" title="Complexity: 7; Coverage: 100%; Class: RectangleShip" alt="" href="edu/duke/ece651/teamX/shared/RectangleShip.html#RectangleShip"/>
+<area shape="poly" coords="304,62,302,64,299,62,302,59,304,62,304,62" title="Complexity: 40; Coverage: 100%; Class: BattleShipBoard" alt="" href="edu/duke/ece651/teamX/shared/BattleShipBoard.html#BattleShipBoard"/>
+<area shape="poly" coords="54,205,52,208,49,205,52,203,54,205,54,205" title="Complexity: 1; Coverage: 0%; Class: LoginException" alt="" href="edu/duke/ece651/teamX/shared/LoginException.html#LoginException"/>
+<area shape="poly" coords="54,91,52,94,49,91,52,89,54,91,54,91" title="Complexity: 32; Coverage: 0%; Class: Server" alt="" href="edu/duke/ece651/teamX/shared/Server.html#Server"/>
+<area shape="poly" coords="54,76,52,79,49,76,52,74,54,76,54,76" title="Complexity: 36; Coverage: 0%; Class: TextPlayer" alt="" href="edu/duke/ece651/teamX/shared/TextPlayer.html#TextPlayer"/>
+<area shape="poly" coords="304,183,302,186,299,183,302,181,304,183,304,183" title="Complexity: 7; Coverage: 100%; Class: RectangleShip" alt="" href="edu/duke/ece651/teamX/shared/RectangleShip.html#RectangleShip"/>
+<area shape="poly" coords="242,143,239,145,237,143,239,140,242,143,242,143" title="Complexity: 18; Coverage: 75%; Class: BasicShip" alt="" href="edu/duke/ece651/teamX/shared/BasicShip.html#BasicShip"/>
+<area shape="poly" coords="304,194,302,197,299,194,302,192,304,194,304,194" title="Complexity: 4; Coverage: 100%; Class: PlacementRuleChecker" alt="" href="edu/duke/ece651/teamX/shared/PlacementRuleChecker.html#PlacementRuleChecker"/>
+<area shape="poly" coords="54,132,52,134,49,132,52,129,54,132,54,132" title="Complexity: 21; Coverage: 0%; Class: ClientHandlerThread" alt="" href="edu/duke/ece651/teamX/shared/ClientHandlerThread.html#ClientHandlerThread"/>
+<area shape="poly" coords="304,198,302,200,299,198,302,195,304,198,304,198" title="Complexity: 3; Coverage: 100%; Class: NoCollisionRuleChecker" alt="" href="edu/duke/ece651/teamX/shared/NoCollisionRuleChecker.html#NoCollisionRuleChecker"/>
+<area shape="poly" coords="304,198,302,200,299,198,302,195,304,198,304,198" title="Complexity: 3; Coverage: 100%; Class: NoCollisionRuleChecker" alt="" href="edu/duke/ece651/teamX/shared/NoCollisionRuleChecker.html#NoCollisionRuleChecker"/>
+<area shape="poly" coords="54,99,52,101,49,99,52,96,54,99,54,99" title="Complexity: 30; Coverage: 0%; Class: GameThread" alt="" href="edu/duke/ece651/teamX/shared/GameThread.html#GameThread"/>
+<area shape="poly" coords="304,146,302,149,299,146,302,144,304,146,304,146" title="Complexity: 17; Coverage: 100%; Class: BoardTextView" alt="" href="edu/duke/ece651/teamX/shared/BoardTextView.html#BoardTextView"/>
+<area shape="poly" coords="274,180,272,182,269,180,272,177,274,180,274,180" title="Complexity: 8; Coverage: 88%; Class: AlienShip" alt="" href="edu/duke/ece651/teamX/shared/AlienShip.html#AlienShip"/>
+<area shape="poly" coords="54,180,52,182,49,180,52,177,54,180,54,180" title="Complexity: 8; Coverage: 0%; Class: TextComputer" alt="" href="edu/duke/ece651/teamX/shared/TextComputer.html#TextComputer"/>
+<area shape="poly" coords="54,205,52,208,49,205,52,203,54,205,54,205" title="Complexity: 1; Coverage: 0%; Class: LoginException" alt="" href="edu/duke/ece651/teamX/shared/LoginException.html#LoginException"/>
+<area shape="poly" coords="54,135,52,138,49,135,52,133,54,135,54,135" title="Complexity: 20; Coverage: 0%; Class: AbstractTextUser" alt="" href="edu/duke/ece651/teamX/shared/AbstractTextUser.html#AbstractTextUser"/>
+<area shape="poly" coords="304,146,302,149,299,146,302,144,304,146,304,146" title="Complexity: 17; Coverage: 100%; Class: BoardTextView" alt="" href="edu/duke/ece651/teamX/shared/BoardTextView.html#BoardTextView"/>
+<area shape="poly" coords="304,157,302,160,299,157,302,155,304,157,304,157" title="Complexity: 14; Coverage: 100%; Class: V2ShipFactory" alt="" href="edu/duke/ece651/teamX/shared/V2ShipFactory.html#V2ShipFactory"/>
+<area shape="poly" coords="304,157,302,160,299,157,302,155,304,157,304,157" title="Complexity: 14; Coverage: 100%; Class: V2ShipFactory" alt="" href="edu/duke/ece651/teamX/shared/V2ShipFactory.html#V2ShipFactory"/>
+<area shape="poly" coords="54,169,52,171,49,169,52,166,54,169,54,169" title="Complexity: 11; Coverage: 0%; Class: PlayerAccount" alt="" href="edu/duke/ece651/teamX/shared/PlayerAccount.html#PlayerAccount"/>
+<area shape="poly" coords="54,205,52,208,49,205,52,203,54,205,54,205" title="Complexity: 1; Coverage: 0%; Class: LoginException" alt="" href="edu/duke/ece651/teamX/shared/LoginException.html#LoginException"/>
+<area shape="poly" coords="264,18,262,20,259,18,262,15,264,18,264,18" title="Complexity: 52; Coverage: 84%; Class: Client" alt="" href="edu/duke/ece651/teamX/client/Client.html#Client"/>
+<area shape="poly" coords="54,205,52,208,49,205,52,203,54,205,54,205" title="Complexity: 1; Coverage: 0%; Class: LoginException" alt="" href="edu/duke/ece651/teamX/shared/LoginException.html#LoginException"/>
+<area shape="poly" coords="264,165,262,167,259,165,262,162,264,165,264,165" title="Complexity: 12; Coverage: 84%; Class: ServerStream" alt="" href="edu/duke/ece651/teamX/client/ServerStream.html#ServerStream"/>
+</map>
+            </div>
+        </div>
+        
+                    <div class="dashboard-widget">
+                <header class="dashboard-widget-header">
+                    <h3>Coverage tree map</h3>
+                </header>
+                <div class="dashboard-widget-content">
+                    <div id="infovis" style="width:100%; height:250px;">
+                        <div id="treemap-loader" style="position:relative;top:50px;">
+                            <p>
+                                Generating Coverage Tree Map. Please wait...
+                            </p>
+                            <p>
+                                <img src="img/ajax-loader.gif" alt="Loading Treemap"/>
+                            </p>
+                        </div>
+                    </div>
+                    <p><a href="treemap.html">See more</a></p>
+                </div>
+
+            </div>
+            </div>
+
+
+    <div class="aui-item">
+        <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>Top 19 project risks</h3>
+            </header>
+            <div class="dashboard-widget-content">
+                
+                                                                <a class="tag" href="edu/duke/ece651/teamX/client/Client.html"
+                            style="font-size: 28px;color:#89c495"
+                            title="Average Method Complexity - 2.364 , Coverage - 84.5% ">Client</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/AlienShip.html"
+                            style="font-size: 22px;color:#89c495"
+                            title="Average Method Complexity - 1.6 , Coverage - 88.5% ">AlienShip</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/ClientHandlerThread.html"
+                            style="font-size: 27px;color:#d04437"
+                            title="Average Method Complexity - 2.333 , Coverage - 0% ">ClientHandlerThread</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/TextPlayer.html"
+                            style="font-size: 27px;color:#d04437"
+                            title="Average Method Complexity - 2.25 , Coverage - 0% ">TextPlayer</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/BasicShip.html"
+                            style="font-size: 22px;color:#14892c"
+                            title="Average Method Complexity - 1.5 , Coverage - 75.8% ">BasicShip</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/Server.html"
+                            style="font-size: 26px;color:#d04437"
+                            title="Average Method Complexity - 2.133 , Coverage - 0% ">Server</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/client/ServerStream.html"
+                            style="font-size: 21px;color:#89c495"
+                            title="Average Method Complexity - 1.333 , Coverage - 84.8% ">ServerStream</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/GameThread.html"
+                            style="font-size: 24px;color:#d04437"
+                            title="Average Method Complexity - 1.875 , Coverage - 0% ">GameThread</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/AbstractTextUser.html"
+                            style="font-size: 21px;color:#d04437"
+                            title="Average Method Complexity - 1.429 , Coverage - 0% ">AbstractTextUser</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/PlayerAccount.html"
+                            style="font-size: 20px;color:#d04437"
+                            title="Average Method Complexity - 1.222 , Coverage - 0% ">PlayerAccount</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/TextComputer.html"
+                            style="font-size: 19px;color:#d04437"
+                            title="Average Method Complexity - 1.143 , Coverage - 0% ">TextComputer</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/client/App.html"
+                            style="font-size: 18px;color:#d04437"
+                            title="Average Method Complexity - 1 , Coverage - 0% ">App</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/server/App.html"
+                            style="font-size: 18px;color:#d04437"
+                            title="Average Method Complexity - 1 , Coverage - 0% ">App</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/SignUpException.html"
+                            style="font-size: 18px;color:#d04437"
+                            title="Average Method Complexity - 1 , Coverage - 0% ">SignUpException</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/LoginException.html"
+                            style="font-size: 18px;color:#d04437"
+                            title="Average Method Complexity - 1 , Coverage - 0% ">LoginException</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/client/AppTest.html"
+                            style="font-size: 12px;color:#d04437"
+                            title="Average Method Complexity - 0 , Coverage -  -  ">AppTest</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/server/AppTest.html"
+                            style="font-size: 12px;color:#d04437"
+                            title="Average Method Complexity - 0 , Coverage -  -  ">AppTest</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/App.html"
+                            style="font-size: 12px;color:#d04437"
+                            title="Average Method Complexity - 0 , Coverage -  -  ">App</a>
+                                    
+                                                                <a class="tag" href="edu/duke/ece651/teamX/shared/AppTest.html"
+                            style="font-size: 12px;color:#d04437"
+                            title="Average Method Complexity - 0 , Coverage -  -  ">AppTest</a>
+                                                    <p><a href="top-risks.html">See more</a></p>
+            </div>
+        </div>
+
+        <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>Most complex packages</h3>
+            </header>
+            <div class="dashboard-widget-content">
+                
+                <table class="aui">
+                                            
+                                                <tr>
+                            <td>1. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.44198895</span>44.2%</div><div style="display: table-cell">
+ <div title="44.2% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:44.2%"></div></div></div></div></td>
+                            <td>
+                                <a href="edu/duke/ece651/teamX/shared/pkg-summary.html">edu.duke.ece651.teamX.shared</a>
+                                <span class="aui-badge" title="Package complexity">325</span>
+                            </td>
+                        </tr>
+                                            
+                                                <tr>
+                            <td>2. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.8255814</span>82.6%</div><div style="display: table-cell">
+ <div title="82.6% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:82.6%"></div></div></div></div></td>
+                            <td>
+                                <a href="edu/duke/ece651/teamX/client/pkg-summary.html">edu.duke.ece651.teamX.client</a>
+                                <span class="aui-badge" title="Package complexity">65</span>
+                            </td>
+                        </tr>
+                                            
+                                                <tr>
+                            <td>3. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                            <td>
+                                <a href="edu/duke/ece651/teamX/server/pkg-summary.html">edu.duke.ece651.teamX.server</a>
+                                <span class="aui-badge" title="Package complexity">1</span>
+                            </td>
+                        </tr>
+                                    </table>
+            </div>
+        </div>
+
+        <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>Most complex classes</h3>
+            </header>
+            <div class="dashboard-widget-content">
+                <table class="aui">
+                                            
+                                                <tr>
+                            <td>1. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.8446602</span>84.5%</div><div style="display: table-cell">
+ <div title="84.5% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:84.5%"></div></div></div></div></td>
+                            <td>
+                                <a  href="edu/duke/ece651/teamX/client/Client.html"  title="edu.duke.ece651.teamX.client.Client">Client</a>
+                                <span class="aui-badge" title="Class complexity">52</span>
+                            </td>
+                        </tr>
+                                            
+                                                <tr>
+                            <td>2. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">1.0</span>100%</div><div style="display: table-cell">
+ <div title="100% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:100%"></div></div></div></div></td>
+                            <td>
+                                <a  href="edu/duke/ece651/teamX/shared/BattleShipBoard.html"  title="edu.duke.ece651.teamX.shared.BattleShipBoard">BattleShipBoard</a>
+                                <span class="aui-badge" title="Class complexity">40</span>
+                            </td>
+                        </tr>
+                                            
+                                                <tr>
+                            <td>3. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                            <td>
+                                <a  href="edu/duke/ece651/teamX/shared/TextPlayer.html"  title="edu.duke.ece651.teamX.shared.TextPlayer">TextPlayer</a>
+                                <span class="aui-badge" title="Class complexity">36</span>
+                            </td>
+                        </tr>
+                                            
+                                                <tr>
+                            <td>4. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                            <td>
+                                <a  href="edu/duke/ece651/teamX/shared/Server.html"  title="edu.duke.ece651.teamX.shared.Server">Server</a>
+                                <span class="aui-badge" title="Class complexity">32</span>
+                            </td>
+                        </tr>
+                                            
+                                                <tr>
+                            <td>5. </td>
+                            <td><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                            <td>
+                                <a  href="edu/duke/ece651/teamX/shared/GameThread.html"  title="edu.duke.ece651.teamX.shared.GameThread">GameThread</a>
+                                <span class="aui-badge" title="Class complexity">30</span>
+                            </td>
+                        </tr>
+                                    </table>
+            </div>
+        </div>
+
+                <div class="dashboard-widget">
+            <header class="dashboard-widget-header">
+                <h3>Least tested methods</h3>
+            </header>
+            <div class="dashboard-widget-content">
+                <table class="aui">
+                                            
+
+                    <tr>
+                        <td align="right">1.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="GameThread.join(PlayerAccount)&#160;:&#160;ClientHandlerThread" href="edu/duke/ece651/teamX/shared/GameThread.html?line=82#src-82">GameThread.join(PlayerAccount)&#160;:&#160;ClientHandlerThread</a>
+                            <span class="aui-badge" title="Method complexity">5</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">2.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="GameThread.run()&#160;:&#160;void" href="edu/duke/ece651/teamX/shared/GameThread.html?line=119#src-119">GameThread.run()&#160;:&#160;void</a>
+                            <span class="aui-badge" title="Method complexity">7</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">3.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="ClientHandlerThread.doAttackingPhase()&#160;:&#160;void" href="edu/duke/ece651/teamX/shared/ClientHandlerThread.html?line=51#src-51">ClientHandlerThread.doAttackingPhase()&#160;:&#160;void</a>
+                            <span class="aui-badge" title="Method complexity">8</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">4.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="Server.handlePlayerConnection(Socket)&#160;:&#160;void" href="edu/duke/ece651/teamX/shared/Server.html?line=208#src-208">Server.handlePlayerConnection(Socket)&#160;:&#160;void</a>
+                            <span class="aui-badge" title="Method complexity">5</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">5.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="TextPlayer.doOneAction()&#160;:&#160;void" href="edu/duke/ece651/teamX/shared/TextPlayer.html?line=127#src-127">TextPlayer.doOneAction()&#160;:&#160;void</a>
+                            <span class="aui-badge" title="Method complexity">6</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">6.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="Server.joinGame(int,PlayerAccount)&#160;:&#160;GameThread" href="edu/duke/ece651/teamX/shared/Server.html?line=167#src-167">Server.joinGame(int,PlayerAccount)&#160;:&#160;GameThread</a>
+                            <span class="aui-badge" title="Method complexity">4</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">7.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="AbstractTextUser.AbstractTextUser(String,Board&lt;Character&gt;,BufferedReader,PrintWriter,V2ShipFactory,Board&lt;Character&gt;)" href="edu/duke/ece651/teamX/shared/AbstractTextUser.html?line=63#src-63">AbstractTextUser.AbstractTextUser(String,Board&lt;Character&gt;,BufferedReader,PrintWriter,V2ShipFactory,Board&lt;Character&gt;)</a>
+                            <span class="aui-badge" title="Method complexity">1</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">8.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="TextPlayer.doPlacementPhase()&#160;:&#160;void" href="edu/duke/ece651/teamX/shared/TextPlayer.html?line=72#src-72">TextPlayer.doPlacementPhase()&#160;:&#160;void</a>
+                            <span class="aui-badge" title="Method complexity">1</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">9.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="TextPlayer.defaultOriShip(Ship&lt;Character&gt;)&#160;:&#160;Ship&lt;Character&gt;" href="edu/duke/ece651/teamX/shared/TextPlayer.html?line=224#src-224">TextPlayer.defaultOriShip(Ship&lt;Character&gt;)&#160;:&#160;Ship&lt;Character&gt;</a>
+                            <span class="aui-badge" title="Method complexity">5</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">10.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="TextPlayer.shipAfterMove(Ship&lt;Character&gt;,Coordinate,char)&#160;:&#160;Ship&lt;Character&gt;" href="edu/duke/ece651/teamX/shared/TextPlayer.html?line=241#src-241">TextPlayer.shipAfterMove(Ship&lt;Character&gt;,Coordinate,char)&#160;:&#160;Ship&lt;Character&gt;</a>
+                            <span class="aui-badge" title="Method complexity">2</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">11.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="GameThread.GameThread(int,int)" href="edu/duke/ece651/teamX/shared/GameThread.html?line=37#src-37">GameThread.GameThread(int,int)</a>
+                            <span class="aui-badge" title="Method complexity">1</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">12.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="AbstractTextUser.receive()&#160;:&#160;void" href="edu/duke/ece651/teamX/shared/AbstractTextUser.html?line=100#src-100">AbstractTextUser.receive()&#160;:&#160;void</a>
+                            <span class="aui-badge" title="Method complexity">3</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">13.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="Server.processSignup(PrintWriter,BufferedReader)&#160;:&#160;PlayerAccount" href="edu/duke/ece651/teamX/shared/Server.html?line=75#src-75">Server.processSignup(PrintWriter,BufferedReader)&#160;:&#160;PlayerAccount</a>
+                            <span class="aui-badge" title="Method complexity">2</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">14.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="Server.processLogin(PrintWriter,BufferedReader)&#160;:&#160;PlayerAccount" href="edu/duke/ece651/teamX/shared/Server.html?line=91#src-91">Server.processLogin(PrintWriter,BufferedReader)&#160;:&#160;PlayerAccount</a>
+                            <span class="aui-badge" title="Method complexity">2</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">15.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="AbstractTextUser.doPlayerSelection()&#160;:&#160;boolean" href="edu/duke/ece651/teamX/shared/AbstractTextUser.html?line=152#src-152">AbstractTextUser.doPlayerSelection()&#160;:&#160;boolean</a>
+                            <span class="aui-badge" title="Method complexity">3</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">16.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="TextPlayer.readPlacement(String,boolean)&#160;:&#160;Placement" href="edu/duke/ece651/teamX/shared/TextPlayer.html?line=37#src-37">TextPlayer.readPlacement(String,boolean)&#160;:&#160;Placement</a>
+                            <span class="aui-badge" title="Method complexity">3</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">17.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="TextPlayer.readCoordinate(String)&#160;:&#160;Coordinate" href="edu/duke/ece651/teamX/shared/TextPlayer.html?line=266#src-266">TextPlayer.readCoordinate(String)&#160;:&#160;Coordinate</a>
+                            <span class="aui-badge" title="Method complexity">3</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">18.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="Server.receive(BufferedReader)&#160;:&#160;String" href="edu/duke/ece651/teamX/shared/Server.html?line=189#src-189">Server.receive(BufferedReader)&#160;:&#160;String</a>
+                            <span class="aui-badge" title="Method complexity">3</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">19.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="ClientHandlerThread.sendGameLoading()&#160;:&#160;void" href="edu/duke/ece651/teamX/shared/ClientHandlerThread.html?line=115#src-115">ClientHandlerThread.sendGameLoading()&#160;:&#160;void</a>
+                            <span class="aui-badge" title="Method complexity">3</span>
+
+                        </td>
+                    </tr>
+                                            
+
+                    <tr>
+                        <td align="right">20.</td>
+                        <td align="right"><div style="display: table; width: 100%">
+<div class="barGraphValue"><span class="sortValue">0.0</span>0%</div><div style="display: table-cell">
+ <div title="0% Covered"  style="min-width:40px;" class="barNegative contribBarNegative "><div class="barPositive contribBarPositive " style="width:0%"></div></div></div></div></td>
+                        <td>
+                              <!-- normal method -->
+                                                      <a title="BasicShip.BasicShip(char,Coordinate,HashMap&lt;Coordinate,&#160;Boolean&gt;,ShipDisplayInfo&lt;T&gt;,ShipDisplayInfo&lt;T&gt;)" href="edu/duke/ece651/teamX/shared/BasicShip.html?line=48#src-48">BasicShip.BasicShip(char,Coordinate,HashMap&lt;Coordinate,&#160;Boolean&gt;,ShipDisplayInfo&lt;T&gt;,ShipDisplayInfo&lt;T&gt;)</a>
+                            <span class="aui-badge" title="Method complexity">2</span>
+
+                        </td>
+                    </tr>
+                                    </table>
+            </div>
+        </div>
+        
+    </div>
+</div>
+                            </div> <!-- tabs-pane active-pane -->
+                        </div>
+
+    <script type="text/javascript" src="jit.js" ></script>
+    <script type="text/javascript" src="treemap-dash-json.js" ></script>
+
+                        </div> <!-- class="aui-page-panel-content-clover" -->
+                    <footer id="footer" role="contentinfo">
+    <section class="footer-body">
+        <ul>
+            <li>
+                Report generated by <a target="_new" href="http://openclover.org">OpenClover</a> v 4.4.1
+                on Sun Apr 16 2023 14:58:24 EDT using coverage data from Sun Apr 16 2023 14:58:23 EDT.
+            </li>
+        </ul>
+        <ul>
+            <li>OpenClover is free and open-source software. </li>
+        </ul>
+    </section>
+</footer>                </section> <!-- class="aui-page-panel-content" -->
+            </div> <!-- class="aui-page-panel-inner" -->
+        </div> <!-- class="aui-page-panel" -->
+    </div> <!-- id="page" -->
+</body>
+</html>
