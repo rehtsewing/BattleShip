@@ -16,7 +16,6 @@ public class Server {
     private final List<GameThread> games;
     /** number of clients */
     protected int clientNum;
-    protected AbstractMapFactory factory;
     /** Boolean indicate whether the server is listening or not*/
     private boolean isListening;
     private final List<PlayerAccount> accounts;
@@ -26,15 +25,14 @@ public class Server {
      *
      * @param port is the port of the socket
      */
-    public Server(int port, AbstractMapFactory factory) throws IOException {
-        this(new ServerSocket(port), factory);
+    public Server(int port) throws IOException {
+        this(new ServerSocket(port));
     }
     /**
      */
-    public Server(ServerSocket ss, AbstractMapFactory factory) {
+    public Server(ServerSocket ss) {
         this.server = ss;
         this.games = new ArrayList<>();
-        this.factory = factory;
         this.isListening = true;
         this.accounts = new ArrayList<>();
     }
@@ -131,36 +129,40 @@ public class Server {
         }
         return true;
     }
-    public GameThread findMatch(PlayerAccount account) throws IOException{
-        String prompt = "Join your exist game? Y/N"; // haven't dealt with Y
-        send(prompt, account.getOutput());
-        String res = receive(account.getReader());
-
-        if(res.equals("N")) {
-            System.out.println(res);
-            return receiveJoinInfo(account);
-        } else {
-            if(account.isEmpty()) {
-                send(String.valueOf(0), account.getOutput());
-                return receiveJoinInfo(account);
-            }
-            String joinPrompt = "Select which game you would like to return"; // haven't dealt with Y
-            send(joinPrompt, account.getOutput());
-            String gameInfo = account.displayGameList();
-            send(gameInfo, account.getOutput());
-            int num = Integer.parseInt(receive(account.getReader()));
-            return account.select(num);
-        }
-    }
+//    public GameThread findMatch(PlayerAccount account) throws IOException{
+//        String prompt = "Join your exist game? Y/N"; // haven't dealt with Y
+//        send(prompt, account.getOutput());
+//        String res = receive(account.getReader());
+//
+//        if(res.equals("N")) {
+//            System.out.println(res);
+//            return receiveJoinInfo(account);
+//        } else {
+//            if(account.isEmpty()) {
+//                send(String.valueOf(0), account.getOutput());
+//                return receiveJoinInfo(account);
+//            }
+//            String joinPrompt = "Select which game you would like to return"; // haven't dealt with Y
+//            send(joinPrompt, account.getOutput());
+//            String gameInfo = account.displayGameList();
+//            send(gameInfo, account.getOutput());
+//            int num = Integer.parseInt(receive(account.getReader()));
+//            return account.select(num);
+//        }
+//    }
     public GameThread receiveJoinInfo(PlayerAccount account) throws IOException{
-        String joinPrompt = "Enter how many players' game you want to join"; // haven't dealt with Y
+        String joinPrompt = "Do you want to play with human or computer H/C"; // haven't dealt with Y
         send(joinPrompt, account.getOutput());
-        String numString = receive(account.getReader());
+        String choice = receive(account.getReader());
         System.out.println("--------------");
-        System.out.println(numString);
+        System.out.println(choice);
         System.out.println("--------------");
-        int num = Integer.parseInt(numString);
-        return joinGame(num, account);
+        if(choice.equals("H")) {
+            return joinGame(2, account);
+        }
+        else {
+            return joinGame(1, account);
+        }
     }
     public synchronized GameThread joinGame(int num, PlayerAccount account){
         System.out.println("games size: "+ games.size());
@@ -171,8 +173,9 @@ public class Server {
                 return game;
             }
         }
-        GameThread gameThread = new GameThread(num, factory, games.size());
+        GameThread gameThread = new GameThread(num, games.size());
         gameThread.start();
+        while (gameThread.getState() != Thread.State.WAITING) {}
         ClientHandlerThread clientThread = gameThread.join(account);
         games.add(gameThread);
         return gameThread;
@@ -222,7 +225,8 @@ public class Server {
             }
             try {
                 while (true) {
-                    GameThread game = findMatch(account);
+//                    GameThread game = findMatch(account);
+                    GameThread game = receiveJoinInfo(account);
                     while(game.isAlive()) {}
                     System.out.println("start new game!!!");
                     games.remove(game);

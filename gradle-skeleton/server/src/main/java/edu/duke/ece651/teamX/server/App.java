@@ -3,13 +3,26 @@
  */
 package edu.duke.ece651.teamX.server;
 
+import edu.duke.ece651.teamX.shared.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 public class App {
-  public String getMessage() {
-    return "Hello from the server for "+ MyName.getName();
-  }
-  public static void main(String[] args) {
-    App a = new App();
-    System.out.println(a.getMessage());
-  }
+    /**
+     * This main method runs the server, listening on port 1651.
+     * Specifically, it creates an instance and calls run.
+     * When done from the command line, this program runs until
+     * externally killed??
+     * @param args is the command line arguments.  These are currently ignored.
+     * @throws IOException if creation of the ServerSocket fails.
+    */
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Can now start connecting clients.");
+        Server server = new Server(8080);
+        server.run();
+    }
 }
+

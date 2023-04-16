@@ -1,15 +1,12 @@
 package edu.duke.ece651.teamX.shared;
 
-import java.io.BufferedReader;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.function.Function;
 
 /** Player pattern in text mode */
 public class TextPlayer extends AbstractTextUser{
-  
+
   /**
    * Construct the textplayer with specfied name, board,
    * BufferedReader, PrintStream, factory and enemy board
@@ -20,9 +17,12 @@ public class TextPlayer extends AbstractTextUser{
    * @param f is version 2 ship factory of current player
    * @param enemyBoard is the board of enemy 
    */
-  public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V2ShipFactory f, Board<Character> enemyBoard) {
+  public TextPlayer(String name, Board<Character> theBoard, BufferedReader input, PrintWriter out, V2ShipFactory f, Board<Character> enemyBoard) {
     super(name, theBoard, input, out, f, enemyBoard);
   }
+  @Override
+  public boolean isComputer() {return false;}
+
   /**
    * Create a Placement object from the information
    * in input reader and handle the IllegalArgumentException 
@@ -35,17 +35,19 @@ public class TextPlayer extends AbstractTextUser{
    * @throw EOFException if not enough placement entered
    */
   public Placement readPlacement(String prompt, boolean version2) throws IOException {
-    out.println(prompt);
-    String s = inputReader.readLine();
+    send(prompt);
+    receive();
+    String s = buffer;
     if(s == null) {
       throw new EOFException("Not enough placement entered");
     }
     try {
       Placement p = new Placement(s, version2);
     } catch(IllegalArgumentException e) {
-      out.println("That placement is invalid: it does not have the correct format.");
+      send("That placement is invalid: it does not have the correct format.");
       return readPlacement(prompt, version2);
     }
+    send("valid format\n");
     return new Placement(s, version2);
   }
   /**
@@ -57,11 +59,11 @@ public class TextPlayer extends AbstractTextUser{
     Ship<Character> s = createFn.apply(p);
     String message = theBoard.tryAddShip(s);
     if(message != null) {
-      out.println(message);
+      send(message);
       doOnePlacement(shipName, createFn);
       return;
     }
-    out.println(view.displayMyOwnBoard());
+    send(view.displayMyOwnBoard());
   }
 
   /**
@@ -69,7 +71,7 @@ public class TextPlayer extends AbstractTextUser{
    */
   @Override
   public void doPlacementPhase() throws IOException {
-    out.println(view.displayMyOwnBoard());
+    send(view.displayMyOwnBoard());
 
     StringBuilder message = new StringBuilder();
     message.append("Player " + name + ": you are going to place the following ships\n");
@@ -83,7 +85,7 @@ public class TextPlayer extends AbstractTextUser{
     message.append("3 \"Destroyers\" that are 1x3\n");
     message.append("3 \"Battleships\" \n");
     message.append("2 \"Carriers\" \n");
-    out.println(message.toString());
+    send(message.toString());
     for(String name : shipsToPlace) {
       doOnePlacement(name, shipCreationFns.get(name));
     }
@@ -96,12 +98,14 @@ public class TextPlayer extends AbstractTextUser{
    */
   @Override
   public void playOneTurn() throws IOException {
-    out.println("Player " + name + "'s turn:");
-    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Enemy's Ocean"));
-    out.println("Possible actions for Player " + name + ":\n");
-    out.println(" F Fire at a square\n" +
+    StringBuilder sb = new StringBuilder();
+    sb.append("Player " + name + "'s turn:\n");
+    sb.append(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Enemy's Ocean"));
+    sb.append("Possible actions for Player " + name + ":\n");
+    sb.append(" F Fire at a square\n" +
                 " M Move a ship to another square (" +  moveShipNum + " remaining)\n" +
                 " S Sonar scan (" + sonarScanNum + " remaining)\n");
+    send(sb.toString());
     handleOneAction();
   }
   /**
@@ -111,7 +115,7 @@ public class TextPlayer extends AbstractTextUser{
       try {
       doOneAction();
     } catch(IllegalArgumentException e) {
-      out.println("That action is invalid: it does not have the correct format or current action is exhausted.");
+      send("That action is invalid: it does not have the correct format or current action is exhausted.");
       handleOneAction();
     }
   }
@@ -122,14 +126,20 @@ public class TextPlayer extends AbstractTextUser{
    */
   @Override
   public void doOneAction() throws IOException{
-    out.println("Player " + name + ", what would you like to do?");
-    String s = inputReader.readLine().toUpperCase();
-    if(s.equals("F")) conductFire();
+    send("Player " + name + ", what would you like to do?");
+    receive();
+    String s = buffer.toUpperCase();
+    if(s.equals("F")) {
+      send("valid");
+      conductFire();
+    }
     else if(s.equals("M") && moveShipNum > 0) {
       moveShipNum -= 1;
+      send("valid");
       conductMove();
     } else if(s.equals("S") && sonarScanNum > 0) {
       sonarScanNum -= 1;
+      send("valid");
       conductScan();
     }
     else throw new IllegalArgumentException("Invalid action number " + s);
@@ -142,9 +152,9 @@ public class TextPlayer extends AbstractTextUser{
     Coordinate c = readCoordinate("Player " + name + " where do you want to fire at?");
     Ship<Character> s = enemyBoard.fireAt(c);
     if(s != null) {
-      out.println("You hit a " + s.getName() + "!\n");
+      send("You hit a " + s.getName() + "!\n");
     } else {
-      out.println("You missed!\n");
+      send("You missed!\n");
     }
   }
   /**
@@ -158,7 +168,7 @@ public class TextPlayer extends AbstractTextUser{
     s.append("Destroyers occupy " + getScanRes('d', scanRes) + " squares\n");
     s.append("Battleships occupy " + getScanRes('b', scanRes) + " squares\n");
     s.append("Carriers occupy " + getScanRes('c', scanRes) + " squares\n");
-    out.println(s.toString());
+    send(s.toString());
   }
   /**
    * Return appearing times of sign if exists
@@ -178,9 +188,10 @@ public class TextPlayer extends AbstractTextUser{
     Coordinate c = readCoordinate("Player " + name + " which ship would you like to choose?");
     Ship<Character> s = theBoard.takeoutShip(c);
     if(s != null) {
+      send("");
       moveTo(s);
     } else {
-      out.println("No ship at this coordinate!\n");
+      send("No ship at this coordinate!\n");
       conductMove();
     }
   }
@@ -195,8 +206,10 @@ public class TextPlayer extends AbstractTextUser{
       Ship<Character> res = shipAfterMove(mid, p.getWhere(), p.getOrientation());
       String message = theBoard.tryAddHideShip(res);
       if(message != null) {
-        out.println(message);
+        send(message);
         moveTo(s);
+      } else {
+        send("");
       }
     }
 
@@ -251,17 +264,19 @@ public class TextPlayer extends AbstractTextUser{
    */
 
   public Coordinate readCoordinate(String prompt) throws IOException {
-    out.println(prompt);
-    String s = inputReader.readLine();
+    send(prompt);
+    receive();
+    String s = buffer;
     if(s == null) {
       throw new EOFException("Not enough coordinate entered");
     }
     try {
       Coordinate c = new Coordinate(s, theBoard.getWidth(), theBoard.getHeight());
     } catch(IllegalArgumentException e) {
-      out.println("That coordinate is invalid: it does not have the correct format.");
+      send("That coordinate is invalid: it does not have the correct format.");
       return readCoordinate(prompt);
     }
+    send("valid");
     return new Coordinate(s);
   }
 

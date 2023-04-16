@@ -1,9 +1,6 @@
 package edu.duke.ece651.teamX.shared;
 
-import java.io.BufferedReader;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +24,7 @@ public abstract class AbstractTextUser implements TextUser{
   final BoardTextView view;
   protected BoardTextView enemyView;
   final BufferedReader inputReader;
-  final PrintStream out;
+  final PrintWriter out;
   final AbstractShipFactory<Character> shipFactory;
   final String name;
   /** ArrayList of the ships' name*/
@@ -47,6 +44,12 @@ public abstract class AbstractTextUser implements TextUser{
   /** Whether this player is selected for the game*/
   final boolean selected;
 
+  private boolean isConnect;
+
+  final String END_OF_TURN = "END_OF_TURN";
+  /** Buffer for message from clients */
+  protected String buffer;
+
   /**
    * Construct the abstract textuser with specfied name, board,
    * BufferedReader, PrintStream, factory and enemy board
@@ -57,7 +60,7 @@ public abstract class AbstractTextUser implements TextUser{
    * @param f is version 2 ship factory of current player
    * @param enemyBoard is the board of enemy 
    */
-  public AbstractTextUser(String name, Board<Character> theBoard, BufferedReader input, PrintStream out, V2ShipFactory f, Board<Character> enemyBoard) {
+  public AbstractTextUser(String name, Board<Character> theBoard, BufferedReader input, PrintWriter out, V2ShipFactory f, Board<Character> enemyBoard) {
     this.name = name;
     this.theBoard = theBoard;
     this.enemyBoard = enemyBoard;
@@ -72,10 +75,47 @@ public abstract class AbstractTextUser implements TextUser{
     this.shipCreationVersion = new HashMap<String, Boolean>();
     this.moveShipNum = 2;
     this.sonarScanNum = 1;
+    this.isConnect = true;
     setupShipCreationBool();
     setupShipCreationMap();
     setupShipCreationList();
   }
+
+  public String getName() {
+    return name;
+  }
+  /**
+   * Send information to one client
+   */
+  public void send(String message) {
+    out.println(message);
+    out.println(END_OF_TURN);
+    out.flush(); // flush the output buffer
+  }
+
+  /**
+   * Receive message to buffer from the input reader
+   * @throws IOException
+   */
+  public void receive() throws IOException {
+    StringBuilder sb = new StringBuilder();
+    String ss = inputReader.readLine();
+//        System.out.println(ss);
+    sb.append(ss);
+    String receLine = inputReader.readLine();
+    if(receLine==null){
+      throw new IOException("");
+    }
+    while(!receLine.equals(END_OF_TURN)) {   //!!!!
+      sb.append("\n"+receLine);
+      receLine = inputReader.readLine();
+    }
+    buffer = sb.toString();
+  }
+  public void disconnect() {isConnect = false;}
+  public boolean isConnected() {return isConnect;}
+  public void connect() {isConnect = true;}
+  public abstract boolean isComputer();
   /** Set up the shipCreationFns Hashmap*/
   protected void setupShipCreationMap() {
     shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
@@ -125,7 +165,9 @@ public abstract class AbstractTextUser implements TextUser{
   @Override
   public boolean isWin() {
     if(enemyBoard.loseCheck()) {
-      out.println("Player " + name + " win the game!");
+      if(!isComputer()) {
+        send("Player " + name + " win the game!");
+      }
       return true;
     }
     return false;

@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class MyNameTest {
+public class BasicShipTest {
   @Test
-  public void test_getName() {
-    assertEquals("teamX", MyName.getName());
+  public void test_() {
+
   }
 
 }

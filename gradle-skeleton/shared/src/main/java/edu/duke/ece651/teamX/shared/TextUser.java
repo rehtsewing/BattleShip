@@ -6,6 +6,11 @@ import java.util.function.Function;
 /** This interface represents game User pattern
  *  in text mode */
 public interface TextUser {
+    public void disconnect();
+    public boolean isConnected();
+    public void connect();
+    public String getName();
+    public boolean isComputer();
   /** set the enemyBoard
    * @param enemy is enemybord to be set*/
   public void setEnemyBoard(Board<Character> enemy);

@@ -5,6 +5,7 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,85 +21,98 @@ public class GameThread extends Thread {
     protected String buffer;
 
     final String END_OF_TURN = "END_OF_TURN";
-    private String mapInfo;
-    /** Map of the game */
-    private final Map theMap;
-    /** View of the map */
-    protected View mapView;
 
-    private final ArrayList<Player> players;
     private final List<PlayerAccount> accounts;
 
-    private final int placementTimes = 5;
-    private final int unitAmount = 36;
-    private String winnerName;
     private final int roomNumber;
     private boolean isStart;
-    public GameThread(int playerNum, AbstractMapFactory factory, int roomNumber) {
+    final List<TextUser> players;
+    /** confront pair in theis app*/
+    protected ArrayList<TextUser> confrontPair;
+    private final int playerNum;
+    private V2ShipFactory factory;
+    private List<Board<Character>> boards;
+    private int flag;
+    private String winner;
+    public GameThread(int playerNum, int roomNumber) {
         this.outputs = new ArrayList<>();
         this.readers = new ArrayList<>();
-        this.theMap = factory.createMap(playerNum);
-        this.players = factory.createPlayers(playerNum, theMap);
-        this.mapView = new MapGuiView();
-        this.mapInfo = mapView.displayMap(theMap);
-
-        this.winnerName = null;
         this.clientThreads = new ArrayList<>();
         this.isStart = false;
-        this.accounts = new ArrayList<>();
+//        this.accounts = new ArrayList<>();
         this.roomNumber = roomNumber;
+        this.playerNum = playerNum;
+        this.players = new ArrayList<>();
+        this.confrontPair = new ArrayList<TextUser>();
+        this.factory = new V2ShipFactory();
+        this.accounts = new ArrayList<>();
+        this.boards = new ArrayList<Board<Character>>();
+        this.flag = 0;
+        this.winner = "";
+        boards.add(new BattleShipBoard<Character>(10, 20, 'X'));
+        boards.add(new BattleShipBoard<Character>(10, 20, 'X'));
     }
+
 
     /**
-     * Constructor of GameThread
-     * @param clientSockets are the sockets of the game thread
-     * @param factory is factory of the game
+     * Do the player selection
+     * choose between two human players
+     * and two computer players
      */
-    public GameThread(List<Socket> clientSockets, AbstractMapFactory factory, int roomNumber) throws IOException{
-        this.outputs = new ArrayList<>();
-        this.readers = new ArrayList<>();
-        this.theMap = factory.createMap(clientSockets.size());
-        this.players = factory.createPlayers(clientSockets.size(), theMap);
-        this.mapView = new MapGuiView();
-        this.mapInfo = mapView.displayMap(theMap);
-        for(Socket cs : clientSockets){
-            outputs.add(new PrintWriter(cs.getOutputStream()));
-            InputStream is= cs.getInputStream();
-            readers.add(new BufferedReader(new InputStreamReader(is)));
-
-        }
-        this.winnerName = null;
-        this.clientThreads = new ArrayList<>();
-        this.accounts = new ArrayList<>();
-        this.roomNumber = roomNumber;
+    public void doPlayerSelection(){
+        confrontPair.add(players.get(0));
+        confrontPair.add(players.get(1));
+        confrontPair.get(0).setEnemyBoard(confrontPair.get(1).getOwnBoard());
+        confrontPair.get(1).setEnemyBoard(confrontPair.get(0).getOwnBoard());
     }
+    public void setWinner(String name) {
+        winner = name;
+    }
+    public String getWinner() {return winner;}
     public int getPlayerNum() {
-        return players.size();
+        return playerNum;
     }
-    public synchronized ClientHandlerThread backToGame(int index, PrintWriter out, BufferedReader in) {
-        ClientHandlerThread cliTh = clientThreads.get(index);
-        cliTh.reconnect(out, in);//haven't handle complete
-//        cliTh.reconnect();
-        System.out.println(players.get(index).getColor() + " reconnect");
-        return cliTh;
-    }
+//    public synchronized ClientHandlerThread backToGame(int index, PrintWriter out, BufferedReader in) {
+//        ClientHandlerThread cliTh = clientThreads.get(index);
+//        cliTh.reconnect(out, in);//haven't handle complete
+////        cliTh.reconnect();
+//        System.out.println("player reconnect");
+//        return cliTh;
+//    }
     public synchronized ClientHandlerThread join(PlayerAccount account){
         if(isStart) return null;
         PrintWriter out = account.getOutput();
         BufferedReader reader = account.getReader();
         outputs.add(out);
         readers.add(reader);
-        ClientHandlerThread clientThread = new ClientHandlerThread(out,
-                reader, theMap, players.get(outputs.size() - 1), this);
+        String name;
+        if(outputs.size() == 1) {
+            name = "Human A";
+        }else {
+            name = "Human B";
+        }
+        TextPlayer p1 = new TextPlayer(name, boards.get(outputs.size() - 1), reader, out, factory, boards.get(2 - outputs.size()));
+        if(playerNum == 1) {
+            TextComputer p2 = new TextComputer("Computer", boards.get(1), reader, out, factory, boards.get(0));
+            players.add(p2);
+            ClientHandlerThread computerThread = new ClientHandlerThread(clientThreads.size(), out,
+                    reader, factory, p2, this);
+            clientThreads.add(computerThread);
+            computerThread.start();
+        }
+        players.add(p1);
+        ClientHandlerThread clientThread = new ClientHandlerThread(clientThreads.size(), out,
+                reader, factory, p1, this);
         clientThreads.add(clientThread);
         clientThread.start();
-        System.out.println("current num" + outputs.size());
-        if(outputs.size() == players.size()) {
+        System.out.println("current num" + outputs.size() + " playerNum: " + playerNum);
+
+        account.addJoinGame(this, outputs.size() - 1);
+        accounts.add(account);
+        if(outputs.size() == playerNum) {
             isStart = true;
             notify();
         }
-        account.addJoinGame(this, outputs.size() - 1);
-        accounts.add(account);
         return clientThread;
     }
 
@@ -107,7 +121,9 @@ public class GameThread extends Thread {
         while(!isStart) {
             synchronized (this) {
                 try {
+                    System.out.println("lock");
                     wait();
+                    System.out.println("unlock");
                 } catch (InterruptedException e) {
                     System.out.println(" game thread wait error");
                 }
@@ -115,8 +131,9 @@ public class GameThread extends Thread {
         }
         try {
             System.out.println("game thread start");
+            doPlayerSelection();
             while (true) {
-                for (Thread t : clientThreads) {
+                for (ClientHandlerThread t : clientThreads) {
                     while (t.getState() != State.WAITING) {
                     }
                 }
@@ -132,6 +149,8 @@ public class GameThread extends Thread {
             }
         }
     }
+    public int getFlag() {return flag;}
+    public void setFlag(int val) {flag = val;}
     @Override
     public boolean equals(Object other) {
         if (other != null && other.getClass().equals(getClass())) {
@@ -151,7 +170,7 @@ public class GameThread extends Thread {
         return false;
     }
     public boolean checkConnection() {
-        for(Player p : players) {
+        for(TextUser p : players) {
             if(p.isConnected()) return true;
         }
         return false;
