@@ -134,7 +134,9 @@ public class GameThread extends Thread {
             doPlayerSelection();
             while (true) {
                 for (ClientHandlerThread t : clientThreads) {
-                    while (t.getState() != State.WAITING) {
+                    if(t.getStatus() != -1) {
+                        while (t.getState() != State.WAITING) {
+                        }
                     }
                 }
                 if(!checkFinish()) break;

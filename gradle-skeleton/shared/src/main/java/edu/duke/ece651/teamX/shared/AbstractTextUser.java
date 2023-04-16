@@ -170,6 +170,9 @@ public abstract class AbstractTextUser implements TextUser{
       }
       return true;
     }
+    if(!isComputer()) {
+      send("no winner");
+    }
     return false;
   }
 }

@@ -172,12 +172,7 @@ public class Client {
         status = 0;
         receiveWinner();
         if(isOver()){
-            if(name.equals(winner)){
-                out.println("Congratulations! You win!");
-            }else {
-                out.println("You lose!!");
-                out.println(winner+" wins.");
-            }
+            out.println(winner);
 
         }
 
@@ -253,6 +248,7 @@ public class Client {
             out.println("computer result");
             out.println(serverStream.read());
         }
+        reportResult();
         serverStream.receive();
         out.print(serverStream.getBuffer());
         while (true) {

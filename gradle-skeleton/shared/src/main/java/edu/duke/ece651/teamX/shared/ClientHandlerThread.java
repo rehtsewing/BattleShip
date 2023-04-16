@@ -53,12 +53,8 @@ public class ClientHandlerThread extends Thread {
             doSynchronization();
             if(gameServer.getFlag() == flag) {
                 synchronized (gameServer) {
-                    player.playOneTurn();
-                    if (player.isWin()) {
-                        gameServer.setWinner(player.getName());
-                        break;
-                    }
                     if(!gameServer.getWinner().isEmpty() && status != -1) {
+                        System.out.println("send other");
                         if(!player.isComputer()) send(gameServer.getWinner(), output);
                         break;
                     } else if(status != -1){
@@ -66,7 +62,12 @@ public class ClientHandlerThread extends Thread {
                             send("no winner", output);
                         }
                     }else break;
+                    player.playOneTurn();
                     gameServer.setFlag(1-flag);
+                    if (player.isWin()) {
+                        gameServer.setWinner(player.getName());
+                        break;
+                    }
                 }
             }
         }
@@ -83,8 +84,9 @@ public class ClientHandlerThread extends Thread {
             player.disconnect();
             System.out.println(e.getMessage());
         }
+        status = -1;
         System.out.println("end!!!!!");
-        doSynchronization();
+//        doSynchronization();
     }
     public int getStatus() {
         return status;
